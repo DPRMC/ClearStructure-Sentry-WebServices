@@ -1,0 +1,16 @@
+{
+    "name": "dprmc/clear-structure-sentry-web-services",
+    "description": "A library of php code to interact with Sentry's Web Services SOAP api.",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^6.0"
+    },
+    "authors": [
+        {
+            "name": "Michael Drennen",
+            "email": "mdrennen@deerparkrd.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
