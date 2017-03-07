@@ -3,7 +3,8 @@
     "description": "A library of php code to interact with Sentry's Web Services SOAP api.",
     "type": "library",
     "require-dev": {
-        "phpunit/phpunit": "^6.0"
+        "phpunit/phpunit": "^6.0",
+        "mikey179/vfsStream": "^1.6"
     },
     "authors": [
         {
@@ -11,8 +12,22 @@
             "email": "mdrennen@deerparkrd.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
-        "php": "^7.0"
+        "php": "^7.0",
+        "ext-soap": "*",
+        "phpdocumentor/reflection-docblock": "~2.0",
+        "phpdocumentor/phpdocumentor": "^2.9"
+    },
+    "scripts":{
+        "pre-autoload-dump":[
+            "vendor\\bin\\phpdoc -d src -t docs\\api"
+        ]
+    },
+    "autoload": {
+        "psr-4": {
+            "DPRMC\\ClearStructure\\Sentry\\Services\\": "src/services/"
+        }
     }
+
 }

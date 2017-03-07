@@ -1,6 +1,6 @@
 <?php
-namespace DPRMC\ClearStructure\Sentry;
+namespace DPRMC\ClearStructure\Sentry\Services;
 
 class RetrieveReconciliationData extends Service{
-    
+
 }
