@@ -1,0 +1,12 @@
+<?php
+namespace DPRMC\ClearStructure\Sentry\Services\Exceptions;
+use SoapFault;
+use Exception;
+
+class ErrorFetchingHeadersException extends SoapFault{
+    public function __construct($message = "", $code = 0, Exception $previous = null) {
+        parent::__construct($message,
+                            $code,
+                            $previous);
+    }
+}

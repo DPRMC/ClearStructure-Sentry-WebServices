@@ -26,7 +26,8 @@
     },
     "autoload": {
         "psr-4": {
-            "DPRMC\\ClearStructure\\Sentry\\Services\\": "src/services/"
+            "DPRMC\\ClearStructure\\Sentry\\Services\\": "src/services/",
+            "DPRMC\\ClearStructure\\Sentry\\Services\\Exceptions\\": "src/services/exceptions"
         }
     }
 
