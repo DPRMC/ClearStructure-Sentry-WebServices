@@ -3,7 +3,6 @@ namespace DPRMC\ClearStructure\Sentry\Services;
 
 use Exception;
 use SoapFault;
-use stdClass;
 use SimpleXMLElement;
 use DPRMC\ClearStructure\Sentry\Services\Exceptions\SentrySoapFaultFactory;
 
@@ -73,8 +72,8 @@ class RetrieveDataCubeOutputWithDefaultsAsDataSet extends Service {
             // property called: RetrieveDataCubeOutputAsDataSetResult;
             $response = $this->soapClient->RetrieveDataCubeOutputWithDefaultsAsDataSet($arguments);
 
-            $schema = new SimpleXMLElement($response->RetrieveDataCubeOutputAsDataSetResult->schema);
-            $any = new SimpleXMLElement($response->RetrieveDataCubeOutputAsDataSetResult->any);
+            $schema = new SimpleXMLElement($response->RetrieveDataCubeOutputWithDefaultsAsDataSetResult->schema);
+            $any = new SimpleXMLElement($response->RetrieveDataCubeOutputWithDefaultsAsDataSetResult->any);
             $rows = [];
             foreach($any->NewDataSet->data_node as $index => $xmlRecord){
                 $rows[] = $xmlRecord;

@@ -51,3 +51,34 @@ try{
     $this->error($e->getMessage() . " " . $e->getFile() . ':' . $e->getLine());
 }
 ```
+
+### RetrieveDataCubeOutputWithDefaultsAsDataSet
+This service is almost exactly the same as RetrieveDataCubeOutputAsDataSet. The difference here is that you don't pass in any parameters. The data cube will execute with whatever default values you have set via the Sentry Web Interface.
+```php
+$location = 'https://sentry1234.clearstructure.com/WebServices/DataReporterService.asmx';
+$user = 'jdoe';
+$pass = '12345'
+$debug = true;
+$dataCubeName = 'my_portfolios_data_cube';
+$cultureString = 'en-US';
+
+try{
+    $service = new RetrieveDataCubeOutputWithDefaultsAsDataSet(
+        $location,
+        $user,
+        $pass,
+        $dataCubeName,
+        $cultureString,
+        $debug);
+    $result = $service->run();
+
+    $schema = $result['schema'];
+    $rows = $result['rows'];
+
+    foreach($rows as $row){
+        echo("\n" . $row->account_number);
+    }
+} catch(Exception $e) {
+    $this->error($e->getMessage() . " " . $e->getFile() . ':' . $e->getLine());
+}
+```
