@@ -121,14 +121,16 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
 
 
     /**
-     * @return array
+     * The front end for this class. Returns a nice array of data from Sentry. Exact format depends
+     * on the data cube that you ask for.
+     * @return array    Associative array with two keys: schema and rows. You probably want rows.
      * @throws Exception
      * @throws Exceptions\AccountNotFoundException
      * @throws Exceptions\DataCubeNotFoundException
      * @throws Exceptions\ErrorFetchingHeadersException
      * @throws SoapFault
      */
-    public function run() {
+    public function run(): array {
         ini_set('memory_limit',-1);
         $arguments = ['userName' => $this->user,
                       'password' => $this->pass,
