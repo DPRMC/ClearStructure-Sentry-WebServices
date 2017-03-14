@@ -10,6 +10,8 @@ use DPRMC\ClearStructure\Sentry\Services\Exceptions\SentrySoapFaultFactory;
 /**
  * Class RetrieveDataCubeOutputAsDataSet
  * @package DPRMC\ClearStructure\Sentry\Services
+ * @author Michael Drennen <mdrennen@deerparkrd.com>
+ * @copyright 2017 Deer Park Road Management Corp
  * EXAMPLE USAGE:
  * ```php
  * $location = env('TEST_LOCATION');
