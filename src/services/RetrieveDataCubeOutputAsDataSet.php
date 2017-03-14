@@ -12,7 +12,7 @@ use DPRMC\ClearStructure\Sentry\Services\Exceptions\SentrySoapFaultFactory;
  * @package DPRMC\ClearStructure\Sentry\Services
  * @author Michael Drennen <mdrennen@deerparkrd.com>
  * @copyright 2017 Deer Park Road Management Corp
- * @see
+ * @see https://github.com/DPRMC/ClearStructure-Sentry-WebServices#retrievedatacubeoutputasdataset Documentation for this class.
  */
 class RetrieveDataCubeOutputAsDataSet extends Service {
 
