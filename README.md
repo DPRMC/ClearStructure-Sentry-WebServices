@@ -15,6 +15,8 @@ Clear Structure is a financial technology company that created a portfolio manag
 > The following code block makes use of the dummy values for location, user, pass, dataCubeName, as well as the params we pass in the request.
  
  > Your location URL should look similar. The only difference will be the sub-domain. Log into your Sentry Web Interface like you normally do. Your sub-domain will show in the URL bar of your browser.
+ 
+ This code example expects to be returned an array of SimpleXMLElement objects. And each of those objects has a property called **account_number**. You can see the foreach loop towards the bottom that simply echos each account number to a new line. 
 
 ```php
 $location = 'https://sentry1234.clearstructure.com/WebServices/DataReporterService.asmx';
@@ -43,7 +45,7 @@ try{
     $rows = $result['rows'];
 
     foreach($rows as $row){
-        $this->line($row->account_number);
+        echo("\n" . $row->account_number);
     }
 } catch(Exception $e) {
     $this->error($e->getMessage() . " " . $e->getFile() . ':' . $e->getLine());
