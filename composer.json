@@ -17,7 +17,8 @@
         "php": "^7.0",
         "ext-soap": "*",
         "phpdocumentor/reflection-docblock": "~2.0",
-        "phpdocumentor/phpdocumentor": "^2.9"
+        "phpdocumentor/phpdocumentor": "^2.9",
+        "sabre/xml": "^2.0"
     },
     "scripts":{
         "pre-autoload-dump":[
@@ -27,7 +28,7 @@
     "autoload": {
         "psr-4": {
             "DPRMC\\ClearStructure\\Sentry\\Services\\": "src/services/",
-            "DPRMC\\ClearStructure\\Sentry\\Services\\Exceptions\\": "src/services/exceptions"
+            "DPRMC\\ClearStructure\\Sentry\\Services\\Exceptions\\": "src/services/exceptions/"
         }
     }
 

@@ -9,6 +9,10 @@ Clear Structure is a financial technology company that created a portfolio manag
 
 [Clear Structure Company Website](https://clearstructure.com/)
 
+## Ignored Services
+### ExportAccount
+I asked Clear Structure about this. They say the code works, but throws an out of memory exception every time because of the size of the result set. For that reason, I don't implement this service in my library.
+
 ## Examples
 
 ### RetrieveDataCubeOutputAsDataSet
