@@ -10,6 +10,40 @@ use DPRMC\ClearStructure\Sentry\Services\Exceptions\SentrySoapFaultFactory;
 /**
  * Class RetrieveDataCubeOutputAsDataSet
  * @package DPRMC\ClearStructure\Sentry\Services
+ * EXAMPLE USAGE:
+ * ```php
+ * $location = env('TEST_LOCATION');
+ * $user = env('TEST_USER');
+ * $pass = env('TEST_PASS');
+ * $debug = true;
+ * $dataCubeName = 'AAA_Test_2';
+ * $cultureString = 'en-US';
+ *
+ * $params = [];
+ * $params[] = RetrieveDataCubeOutputAsDataSet::getDataCubeXmlParameter('start_date','1/1/2017','datetime');
+ * $params[] = RetrieveDataCubeOutputAsDataSet::getDataCubeXmlParameter('as_of_date','1/31/2017','datetime');
+ *
+ * try{
+ *      $service = new RetrieveDataCubeOutputAsDataSet(
+ *          $location,
+ *          $user,
+ *          $pass,
+ *          $dataCubeName,
+ *          $cultureString,
+ *          $params,
+ *          $debug);
+ *      $result = $service->run();
+ *
+ *      $schema = $result['schema'];
+ *      $rows = $result['rows'];
+ *
+ *      foreach($rows as $row){
+ *          $this->line($row->account_number);
+ *      }
+ * } catch(Exception $e) {
+ *      $this->error($e->getMessage() . " " . $e->getFile() . ':' . $e->getLine());
+ * }
+ * ```
  */
 class RetrieveDataCubeOutputAsDataSet extends Service {
 
