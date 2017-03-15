@@ -35,17 +35,17 @@ class RetrieveDataCubeOutputWithDefaultsAsExcel extends Service{
      * @param string $location  The URL of the Sentry web services API. It's where we will send this request. This url is different for every Sentry customer.
      * @param string $user  A valid/active Sentry user account.
      * @param string $pass  An encrypted version of your Sentry password. Use their Data Protector page to properly encrypt the password.
-     * @param string $dataCubeName  The name of your data cube that you created in Sentry.
+     * @param string $dataReportName  The name of your data cube that you created in Sentry.
      * @param string $culture   American? Use en-US.
      * @param string $destination   An absolute or relative path to the destination directory. The php function realpath() is used to turn it into an absolute path.
      * @param bool $debug   I don't think we need this anymore.
      */
-    public function __construct(string $location, string $user, string $pass, string $dataCubeName, string $culture='en-US', string $destination='', bool $debug = false) {
+    public function __construct(string $location, string $user, string $pass, string $dataReportName, string $culture='en-US', string $destination='', bool $debug = false) {
         parent::__construct($location,
                             $user,
                             $pass,
                             $debug);
-        $this->dataCubeName = $dataCubeName;
+        $this->dataCubeName = $dataReportName;
         $this->culture = $culture;
         $this->destinationDir = $this->setAbsolutePathToDestinationDirectory($destination);
     }

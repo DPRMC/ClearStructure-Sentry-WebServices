@@ -30,7 +30,7 @@ I wrote the code for this before I got notice that this service was not supporte
 ```php
 $location = 'https://sentry1234.clearstructure.com/WebServices/DataReporterService.asmx';
 $user = 'jdoe';
-$pass = '12345'
+$pass = '12345';
 $debug = true;
 $dataCubeName = 'my_portfolios_data_cube';
 $cultureString = 'en-US';
@@ -66,7 +66,7 @@ This service is almost exactly the same as RetrieveDataCubeOutputAsDataSet. The 
 ```php
 $location = 'https://sentry1234.clearstructure.com/WebServices/DataReporterService.asmx';
 $user = 'jdoe';
-$pass = '12345'
+$pass = '12345';
 $debug = true;
 $dataCubeName = 'my_portfolios_data_cube';
 $cultureString = 'en-US';
