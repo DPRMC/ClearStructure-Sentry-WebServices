@@ -10,8 +10,13 @@ Clear Structure is a financial technology company that created a portfolio manag
 [Clear Structure Company Website](https://clearstructure.com/)
 
 ## Ignored Services
+From Clear Structure:
+> All Sentry's API are all good except (RetrieveReconciliationData & ExportAccountInRange). These are outdated and they might not retrieve valid data.
 ### ExportAccount
 I asked Clear Structure about this. They say the code works, but throws an out of memory exception every time because of the size of the result set. For that reason, I don't implement this service in my library.
+
+### RetrieveReconciliationData 
+I wrote the code for this before I got notice that this service was not supported. I'm not going to delete this class in case they enable it in the future. That being said, don't use it. There are other tools available to get reconciliation data.
 
 ## Examples
 

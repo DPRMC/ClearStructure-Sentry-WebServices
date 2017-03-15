@@ -1,11 +1,13 @@
 <?php
 namespace DPRMC\ClearStructure\Sentry\Services;
 use Exception;
-use SimpleXMLElement;
 use SoapFault;
 use DPRMC\ClearStructure\Sentry\Services\Exceptions\SentrySoapFaultFactory;
 
-
+/**
+ * Class RetrieveReconciliationData
+ * @package DPRMC\ClearStructure\Sentry\Services
+ */
 class RetrieveReconciliationData extends Service{
 
     /**
@@ -75,17 +77,15 @@ class RetrieveReconciliationData extends Service{
             $schemaXml = $response->RetrieveReconciliationDataResult->schema;
             $holdingsSchema = $this->parseHoldingsSchema($schemaXml);
             $transactionsSchema = $this->parseTransactionsSchema($schemaXml);
+            $anyXml = $response->RetrieveReconciliationDataResult->any;
 
-            /**
-             * @todo Parse the data(any) result next.
-             */
-
-
-
+            list($holdings, $transactions) = $this->parseAnyData($anyXml);
 
             return [
                 'holdingsSchema' => $holdingsSchema,
-                'transactionsSchema' => $transactionsSchema
+                'transactionsSchema' => $transactionsSchema,
+                'holdings' => $holdings,
+                'transactions' => $transactions
             ];
         } catch (SoapFault $e) {
             throw SentrySoapFaultFactory::make($e);
@@ -138,5 +138,69 @@ class RetrieveReconciliationData extends Service{
             ];
         }
         return $schema;
+    }
+
+    private function parseAnyData(string $xml): array{
+        $service = new \Sabre\Xml\Service();
+        $dataArray = $service->parse($xml);
+
+        $rawData = $dataArray[0]['value'];
+
+        $holdings = [];
+        $transactions = [];
+        foreach($rawData as $i => $row){
+            switch( $this->getRowType($row['name'])):
+                case 'holding':
+                    $holdings[] = $this->parseRow($row['value']);
+                    break;
+
+                case 'transaction':
+                    $transactions[] = $this->parseRow($row['value']);
+                    break;
+
+                default:
+                    throw new Exception("The row was named [" . $row['name'] . "] and that isn't in my switch statement.");
+                    break;
+            endswitch;
+        }
+        return [$holdings, $transactions];
+    }
+
+    /**
+     * @param string $value
+     * @return string
+     * @throws Exception
+     */
+    private function getRowType(string $value): string{
+        if( $value == '{}Holding_Reconciliation'){
+            return 'holding';
+        } elseif($value == '{}Transaction_Reconciliation'){
+            return 'transaction';
+        } else{
+            throw new Exception("The row was named [" . $value . "] and we can't parse that.");
+        }
+    }
+
+    /**
+     * The way the Sabre parser works, it adds the namespace before the name within a pair of
+     * squiggly brackets. Sentry doesn't return a namespace, so we just get a couple of
+     * squiggly brackets. Remove those and return the rest of the string as the name.
+     * @param string $value
+     * @return string
+     */
+    private function getName(string $value): string{
+        return substr($value,2);
+    }
+
+    /**
+     * @param array $row
+     * @return array
+     */
+    private function parseRow(array $row): array{
+        $parsedRow = [];
+        foreach($row as $i => $node){
+            $parsedRow[$this->getName($node['name'])] = $node['value'];
+        }
+        return $parsedRow;
     }
 }
