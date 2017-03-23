@@ -10,8 +10,6 @@ use Exception;
 class AuthPasswordEncryptionException extends SoapFault{
 
     public function __construct($message = "", $code = 0, Exception $previous = null) {
-        parent::__construct("The password you used was not encrypted properly. Use the Data Protector page on Sentry's website to encrypt the password you send. " . $message,
-                            $code,
-                            $previous);
+        parent::__construct((string)$code, "The password you used was not encrypted properly. Use the Data Protector page on Sentry's website to encrypt the password you send. " . $message);
     }
 }

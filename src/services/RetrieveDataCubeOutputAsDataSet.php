@@ -71,17 +71,17 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
      * @param string $location The url that you are going to send this request to. Every Sentry customer has a different URL.
      * @param string $user The user name of an active account you have with Sentry.
      * @param string $pass The password for that user name.
-     * @param string $dataReportName The name of the data cube you created in Sentry's web interface.
+     * @param string $dataCubeName The name of the data cube you created in Sentry's web interface.
      * @param string $culture The language string you have to pass. Use en-US as default.
      * @param array $parameters An array of associative arrays returned from the getDataCubeXmlParameter() function.
      * @param bool $debug
      */
-    public function __construct(string $location, string $user, string $pass, string $dataReportName, string $culture = 'en-US', array $parameters, bool $debug = false) {
+    public function __construct(string $location, string $user, string $pass, string $dataCubeName, string $culture = 'en-US', array $parameters, bool $debug = false) {
         parent::__construct($location,
                             $user,
                             $pass,
                             $debug);
-        $this->dataCubeName = $dataReportName;
+        $this->dataCubeName = $dataCubeName;
         $this->culture = $culture;
         $this->parameters = $parameters;
 
