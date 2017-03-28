@@ -4,6 +4,9 @@ use Exception;
 use SoapFault;
 use SimpleXMLElement;
 use stdClass;
+
+use Carbon\Carbon;
+
 use DPRMC\ClearStructure\Sentry\Services\Exceptions\SentrySoapFaultFactory;
 
 /**
@@ -53,7 +56,7 @@ class ImportDataXml extends Service {
 
 
     /**
-     * @return SimpleXMLElement $response->ImportDataXmlResult->any is filled with XML that you can parse.
+     * @return array $response->ImportDataXmlResult->any is filled with XML that you can parse.
      * @throws Exception
      * @throws Exceptions\AccountNotFoundException
      * @throws Exceptions\DataCubeNotFoundException
@@ -73,8 +76,8 @@ class ImportDataXml extends Service {
             $response = $this->soapClient->ImportDataXml($arguments);
             $xml = $this->parseXmlFromResponse($response);
 
-            $this->parseResultFromXmlInResponse($xml);
-            return $xml;
+            $results = $this->parseResultFromXmlInResponse($xml);
+            return $results;
 
         } catch (SoapFault $e) {
             throw SentrySoapFaultFactory::make($e);
@@ -117,9 +120,47 @@ class ImportDataXml extends Service {
         return $xml;
     }
 
-    protected function parseResultFromXmlInResponse(SimpleXMLElement $xml){
-        var_dump($xml->time);
+    /**
+     * @param SimpleXMLElement $xml
+     * @return array
+     */
+    protected function parseResultFromXmlInResponse(SimpleXMLElement $xml): array{
+        // Get the start time of this import call.
+        $tables = [];
 
-        var_dump($xml->tables);
+        foreach($xml->tables as $i => $table){
+            $tableXmlAttributes = [];
+            $tableXmlAttributeObject = $table->attributes();
+            foreach( $tableXmlAttributeObject as $name => $value ){
+                $tableXmlAttributes[$name] = strval($value);
+            }
+
+            $tableName = isset($tableXmlAttributes['name']) ? $tableXmlAttributes['name'] : null;
+            $rowsImported = $table->import;
+            $errors = $table->errors;
+            $runTime = $table->RunTime;
+
+            // RunTime statistics.
+            $runtimeXmlAttributes = [];
+            $runtimeXmlAttributeObject = $table->RunTime->attributes();
+
+            foreach( $runtimeXmlAttributeObject as $name => $value ){
+                $runtimeXmlAttributes[$name] = strval($value);
+            }
+            $startTime = isset($runtimeXmlAttributes['Start']) ? Carbon::parse($runtimeXmlAttributes['Start'], $this->sentryTimeZone) : null;
+            $endTime = isset($runtimeXmlAttributes['End']) ? Carbon::parse($runtimeXmlAttributes['End'], $this->sentryTimeZone) : null;
+
+            $newTable = [
+                'name' => $tableName,
+                'rows_imported' => $rowsImported,
+                'errors' => $errors,
+                'start_time' => $startTime,
+                'end_time' => $endTime
+            ];
+
+            $tables[] = $newTable;
+        }
+
+        return $tables;
     }
 }

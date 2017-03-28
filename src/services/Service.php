@@ -64,6 +64,8 @@ abstract class Service {
      */
     protected $soapClient;
 
+    protected $sentryTimeZone = 'US/Central';
+
     /**
      * Service constructor.
      * @param string $location
