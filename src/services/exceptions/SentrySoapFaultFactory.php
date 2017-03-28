@@ -30,6 +30,10 @@ class SentrySoapFaultFactory {
             return new AuthBadUserException($e->getMessage(), $e->getCode(), $e->getPrevious());
         elseif( preg_match("/The following culture string is not valid: (.*)\. Please use a culture like 'en-US' or 'en-GB'\./",$e->getMessage()) === 1 ):
             return new InvalidCultureStringException($e->getMessage(), $e->getCode(), $e->getPrevious());
+        elseif( preg_match("/There is no import data to process\./",$e->getMessage()) === 1 ):
+            return new NoImportDataToProcessException($e->getMessage(), $e->getCode(), $e->getPrevious());
+        elseif( preg_match("/Data at the root level is invalid\./",$e->getMessage()) === 1 ):
+            return new BadImportDataSubmittedException($e->getMessage(), $e->getCode(), $e->getPrevious());
         else:
             return $e;
         endif;

@@ -3,6 +3,7 @@ namespace DPRMC\ClearStructure\Sentry\Services;
 use Exception;
 use SoapFault;
 use SimpleXMLElement;
+use stdClass;
 use DPRMC\ClearStructure\Sentry\Services\Exceptions\SentrySoapFaultFactory;
 
 /**
@@ -17,15 +18,15 @@ class ImportDataXml extends Service {
 
     /**
      * ImportData constructor.
-     * @param string $location
-     * @param string $user
-     * @param string $pass
-     * @param string $dataSetName If this were an standard data file import of an Excel sheet, this would be the tab name from the spreadsheet.
-     * @param array $dataSet An associative array of data to be imported into Sentry. Top level is numerically indexed. Sub-arrays are name-value pairs.
-     * @param bool $sortTransactionsByTradeDate
-     * @param bool $createTrades
-     * @param string $culture
-     * @param bool $debug
+     * @param string $location      The URL of Clear Structure's server where you will send the request. Unique to each Sentry customer.
+     * @param string $user          The username of the Sentry user account that will be used for authentication.
+     * @param string $pass          The encrypted password of the Sentry user mentioned above. Contact Clear Structure for details on their Data Protection tool.
+     * @param string $dataSetName   If this were an standard data file import of an Excel sheet, this would be the tab name from the spreadsheet.
+     * @param array $dataSet        An associative array of data to be imported into Sentry. Top level is numerically indexed. Sub-arrays are name-value pairs.
+     * @param bool $sortTransactionsByTradeDate Only used when importing transactions. Whether to order transactions by trade date.
+     * @param bool $createTrades                Only used when importing trades. Whether to create an actual Trade Item or just a transaction
+     * @param string $culture                   Example: en-US
+     * @param bool $debug                       Not currently used.
      */
     public function __construct(string $location,
                                 string $user,
@@ -41,16 +42,18 @@ class ImportDataXml extends Service {
                             $pass,
                             $debug);
 
+
         $this->dataSet = $this->formatDataSetAsXml($dataSetName,
                                                    $dataSet);
 
         $this->sortTransactionsByTradeDate = $sortTransactionsByTradeDate;
         $this->createTrades = $createTrades;
+        $this->culture = $culture;
     }
 
 
     /**
-     * @return mixed
+     * @return SimpleXMLElement $response->ImportDataXmlResult->any is filled with XML that you can parse.
      * @throws Exception
      * @throws Exceptions\AccountNotFoundException
      * @throws Exceptions\DataCubeNotFoundException
@@ -58,18 +61,21 @@ class ImportDataXml extends Service {
      * @throws SoapFault
      */
     public function run() {
-        ini_set('memory_limit',
-                -1);
+        ini_set('memory_limit', -1);
         $arguments = ['userName' => $this->user,
                       'password' => $this->pass,
-                      'dataSet' => $this->dataSet,
+                      'xmlString' => $this->dataSet,
                       'sortTransactionsByTradeDate' => $this->sortTransactionsByTradeDate,
                       'createTrades' => $this->createTrades,
                       'cultureString' => $this->culture];
 
         try {
             $response = $this->soapClient->ImportDataXml($arguments);
-            return $response;
+            $xml = $this->parseXmlFromResponse($response);
+
+            $this->parseResultFromXmlInResponse($xml);
+            return $xml;
+
         } catch (SoapFault $e) {
             throw SentrySoapFaultFactory::make($e);
         } catch (Exception $e) {
@@ -93,5 +99,27 @@ class ImportDataXml extends Service {
         }
         $xml = trim($xmlElement->asXML());
         return $xml;
+    }
+
+    /**
+     * Sentry returns a response that gets turned into a stdClass by php automatically. Inside
+     * that stdClass is an XML string that holds details about the ImportDataXml attempt.
+     * @param stdClass $response
+     * @return SimpleXMLElement
+     * @throws Exception
+     */
+    protected function parseXmlFromResponse(stdClass $response): SimpleXMLElement{
+        if( ! isset($response->ImportDataXmlResult->any) ){
+            throw new Exception("The response from Sentry was not formatted properly. If there actually was a valid response, then you need to add code to catch this variation.");
+        }
+
+        $xml = new SimpleXMLElement($response->ImportDataXmlResult->any);
+        return $xml;
+    }
+
+    protected function parseResultFromXmlInResponse(SimpleXMLElement $xml){
+        var_dump($xml->time);
+
+        var_dump($xml->tables);
     }
 }
