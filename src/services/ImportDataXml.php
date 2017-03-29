@@ -7,6 +7,7 @@ use SimpleXMLElement;
 use stdClass;
 use Carbon\Carbon;
 use DPRMC\ClearStructure\Sentry\Services\Exceptions\SentrySoapFaultFactory;
+use DPRMC\ClearStructure\Sentry\Services\ImportDataXmlResult;
 
 /**
  * Class ImportDataXml
@@ -55,14 +56,17 @@ class ImportDataXml extends Service {
 
 
     /**
-     * @return array $response->ImportDataXmlResult->any is filled with XML that we parse and return in a php array.
+     * $response->ImportDataXmlResult->any is filled with XML that we parse and return an ImportDataXmlResult object. We return that object,
+     * because it has some nice functions in it to aggregate data from the xml response. You can import more than one batch in a single
+     * ImportDataXml service call.
+     * @return ImportDataXmlResult
      * @throws Exception
      * @throws Exceptions\AccountNotFoundException
      * @throws Exceptions\DataCubeNotFoundException
      * @throws Exceptions\ErrorFetchingHeadersException
      * @throws SoapFault
      */
-    public function run(): array {
+    public function run(): ImportDataXmlResult {
         ini_set('memory_limit',
                 -1);
         $arguments = ['userName' => $this->user,
@@ -76,8 +80,7 @@ class ImportDataXml extends Service {
             $response = $this->soapClient->ImportDataXml($arguments);
             $xml = $this->parseXmlFromResponse($response);
             $results = $this->parseResultFromXmlInResponse($xml);
-            return $results;
-
+            return new ImportDataXmlResult($results);
         } catch (SoapFault $e) {
             throw SentrySoapFaultFactory::make($e);
         } catch (Exception $e) {
