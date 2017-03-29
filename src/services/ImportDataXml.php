@@ -1,12 +1,11 @@
 <?php
 namespace DPRMC\ClearStructure\Sentry\Services;
+
 use Exception;
 use SoapFault;
 use SimpleXMLElement;
 use stdClass;
-
 use Carbon\Carbon;
-
 use DPRMC\ClearStructure\Sentry\Services\Exceptions\SentrySoapFaultFactory;
 
 /**
@@ -21,15 +20,15 @@ class ImportDataXml extends Service {
 
     /**
      * ImportData constructor.
-     * @param string $location      The URL of Clear Structure's server where you will send the request. Unique to each Sentry customer.
-     * @param string $user          The username of the Sentry user account that will be used for authentication.
-     * @param string $pass          The encrypted password of the Sentry user mentioned above. Contact Clear Structure for details on their Data Protection tool.
-     * @param string $dataSetName   If this were an standard data file import of an Excel sheet, this would be the tab name from the spreadsheet.
-     * @param array $dataSet        An associative array of data to be imported into Sentry. Top level is numerically indexed. Sub-arrays are name-value pairs.
+     * @param string $location The URL of Clear Structure's server where you will send the request. Unique to each Sentry customer.
+     * @param string $user The username of the Sentry user account that will be used for authentication.
+     * @param string $pass The encrypted password of the Sentry user mentioned above. Contact Clear Structure for details on their Data Protection tool.
+     * @param string $dataSetName If this were an standard data file import of an Excel sheet, this would be the tab name from the spreadsheet.
+     * @param array $dataSet An associative array of data to be imported into Sentry. Top level is numerically indexed. Sub-arrays are name-value pairs.
      * @param bool $sortTransactionsByTradeDate Only used when importing transactions. Whether to order transactions by trade date.
-     * @param bool $createTrades                Only used when importing trades. Whether to create an actual Trade Item or just a transaction
-     * @param string $culture                   Example: en-US
-     * @param bool $debug                       Not currently used.
+     * @param bool $createTrades Only used when importing trades. Whether to create an actual Trade Item or just a transaction
+     * @param string $culture Example: en-US
+     * @param bool $debug Not currently used.
      */
     public function __construct(string $location,
                                 string $user,
@@ -56,15 +55,16 @@ class ImportDataXml extends Service {
 
 
     /**
-     * @return array $response->ImportDataXmlResult->any is filled with XML that you can parse.
+     * @return array $response->ImportDataXmlResult->any is filled with XML that we parse and return in a php array.
      * @throws Exception
      * @throws Exceptions\AccountNotFoundException
      * @throws Exceptions\DataCubeNotFoundException
      * @throws Exceptions\ErrorFetchingHeadersException
      * @throws SoapFault
      */
-    public function run() {
-        ini_set('memory_limit', -1);
+    public function run(): array {
+        ini_set('memory_limit',
+                -1);
         $arguments = ['userName' => $this->user,
                       'password' => $this->pass,
                       'xmlString' => $this->dataSet,
@@ -75,7 +75,6 @@ class ImportDataXml extends Service {
         try {
             $response = $this->soapClient->ImportDataXml($arguments);
             $xml = $this->parseXmlFromResponse($response);
-
             $results = $this->parseResultFromXmlInResponse($xml);
             return $results;
 
@@ -111,8 +110,8 @@ class ImportDataXml extends Service {
      * @return SimpleXMLElement
      * @throws Exception
      */
-    protected function parseXmlFromResponse(stdClass $response): SimpleXMLElement{
-        if( ! isset($response->ImportDataXmlResult->any) ){
+    protected function parseXmlFromResponse(stdClass $response): SimpleXMLElement {
+        if (!isset($response->ImportDataXmlResult->any)) {
             throw new Exception("The response from Sentry was not formatted properly. If there actually was a valid response, then you need to add code to catch this variation.");
         }
 
@@ -124,43 +123,68 @@ class ImportDataXml extends Service {
      * @param SimpleXMLElement $xml
      * @return array
      */
-    protected function parseResultFromXmlInResponse(SimpleXMLElement $xml): array{
+    protected function parseResultFromXmlInResponse(SimpleXMLElement $xml): array {
         // Get the start time of this import call.
         $tables = [];
 
-        foreach($xml->tables as $i => $table){
-            $tableXmlAttributes = [];
-            $tableXmlAttributeObject = $table->attributes();
-            foreach( $tableXmlAttributeObject as $name => $value ){
-                $tableXmlAttributes[$name] = strval($value);
-            }
+        $numTables = $xml->tables->count();
 
-            $tableName = isset($tableXmlAttributes['name']) ? $tableXmlAttributes['name'] : null;
-            $rowsImported = $table->import;
-            $errors = $table->errors;
-            $runTime = $table->RunTime;
+        for ($i = 0; $i < $numTables; $i++) {
+
+            $table = $xml->tables[$i]->table;
+            $tableName = $this->xmlAttribute($table,
+                                             'name') ?? null;
+
+            $rowsImported = strval($table->import);
+            $errors = strval($table->errors);
+            $runTime = strval($table->RunTime);
 
             // RunTime statistics.
-            $runtimeXmlAttributes = [];
-            $runtimeXmlAttributeObject = $table->RunTime->attributes();
+            $startTime = $this->xmlAttribute($table->RunTime,
+                                             'Start') ? $this->convertTimeStringWithMicrosecondsToCarbon($this->xmlAttribute($table->RunTime,
+                                                                                                                             'Start'),
+                                                                                                         $this->sentryTimeZone) : null;
+            $endTime = $this->xmlAttribute($table->RunTime,
+                                           'End') ? $this->convertTimeStringWithMicrosecondsToCarbon($this->xmlAttribute($table->RunTime,
+                                                                                                                         'End'),
+                                                                                                     $this->sentryTimeZone) : null;
 
-            foreach( $runtimeXmlAttributeObject as $name => $value ){
-                $runtimeXmlAttributes[$name] = strval($value);
-            }
-            $startTime = isset($runtimeXmlAttributes['Start']) ? Carbon::parse($runtimeXmlAttributes['Start'], $this->sentryTimeZone) : null;
-            $endTime = isset($runtimeXmlAttributes['End']) ? Carbon::parse($runtimeXmlAttributes['End'], $this->sentryTimeZone) : null;
-
-            $newTable = [
-                'name' => $tableName,
-                'rows_imported' => $rowsImported,
-                'errors' => $errors,
-                'start_time' => $startTime,
-                'end_time' => $endTime
-            ];
+            $newTable = ['name' => $tableName,
+                         'rows_imported' => $rowsImported,
+                         'errors' => $errors,
+                         'start_time' => $startTime,
+                         'end_time' => $endTime,
+                         'run_time' => $runTime];
 
             $tables[] = $newTable;
         }
 
         return $tables;
+    }
+
+
+    /**
+     * @param SimpleXMLElement $xml
+     * @param string $attribute
+     * @return string
+     * @throws Exception
+     */
+    protected function xmlAttribute(SimpleXMLElement $xml, string $attribute): string {
+        if (isset($xml[$attribute])) {
+            return strval($xml[$attribute]);
+        }
+        throw new Exception("The attribute [$attribute] was not found in the SimpleXMLElement you passed in.");
+    }
+
+    /**
+     * @param string $time
+     * @param string $timeZone
+     * @return Carbon
+     */
+    protected function convertTimeStringWithMicrosecondsToCarbon(string $time, string $timeZone): Carbon {
+        $truncatedTime = substr($time,
+                                -4);
+        return Carbon::parse($truncatedTime,
+                             $timeZone);
     }
 }
