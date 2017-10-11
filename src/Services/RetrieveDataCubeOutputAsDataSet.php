@@ -1,4 +1,5 @@
 <?php
+
 namespace DPRMC\ClearStructure\Sentry\Services;
 
 use Exception;
@@ -8,13 +9,13 @@ use SimpleXMLElement;
 use DPRMC\ClearStructure\Sentry\Services\Exceptions\SentrySoapFaultFactory;
 
 
-
 /**
  * Class RetrieveDataCubeOutputAsDataSet
- * @package DPRMC\ClearStructure\Sentry\Services
- * @author Michael Drennen <mdrennen@deerparkrd.com>
+ * @package   DPRMC\ClearStructure\Sentry\Services
+ * @author    Michael Drennen <mdrennen@deerparkrd.com>
  * @copyright 2017 Deer Park Road Management Corp
- * @see https://github.com/DPRMC/ClearStructure-Sentry-WebServices#retrievedatacubeoutputasdataset Documentation for this class.
+ * @see       https://github.com/DPRMC/ClearStructure-Sentry-WebServices#retrievedatacubeoutputasdataset Documentation
+ *            for this class.
  */
 class RetrieveDataCubeOutputAsDataSet extends Service {
 
@@ -44,50 +45,56 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
      * data type in the request. This array is every data type they accept.
      * @var array
      */
-    protected $validDataTypes = ['dataCubeBooleanParameter' => 'boolean',
-                                 'dataCubeDateTimeParameter' => 'datetime',
-                                 'dataCubeDecimalParameter' => 'decimal',
-                                 'dataCubeDoubleParameter' => 'double',
-                                 'dataCubeIntegerParameter' => 'integer',
-                                 'dataCubeStringParameter' => 'string'];
+    protected $validDataTypes = [ 'dataCubeBooleanParameter'  => 'boolean',
+                                  'dataCubeDateTimeParameter' => 'datetime',
+                                  'dataCubeDecimalParameter'  => 'decimal',
+                                  'dataCubeDoubleParameter'   => 'double',
+                                  'dataCubeIntegerParameter'  => 'integer',
+                                  'dataCubeStringParameter'   => 'string' ];
 
     /**
      * Example usage:
      * $params[] = $this->getDataCubeXmlParameter('as_of_date', $asOfDate, 'datetime');
-     * @param string $name The name you gave this parameter when you set up the data cube in Sentry's web interface.
-     * @param string $value The value you want to pass in for this parameter.
-     * @param string $dataType The data type you are telling Sentry to expect. These are defined in the $validDataTypes array.
+     *
+     * @param string $name     The name you gave this parameter when you set up the data cube in Sentry's web
+     *                         interface.
+     * @param string $value    The value you want to pass in for this parameter.
+     * @param string $dataType The data type you are telling Sentry to expect. These are defined in the $validDataTypes
+     *                         array.
+     *
      * @return array    A associative array that gets added to a master array of parameters, that in turn, gets
      *                  passed into the getDataCubeXmlParameters() function.
      */
-    public static function getDataCubeXmlParameter(string $name, string $value = '', string $dataType): array {
-        return ['name' => $name,
-                'value' => $value,
-                'datatype' => $dataType];
+    public static function getDataCubeXmlParameter( string $name, string $value = '', string $dataType ): array {
+        return [ 'name'     => $name,
+                 'value'    => $value,
+                 'datatype' => $dataType ];
     }
 
     /**
      * RetrieveDataCubeOutputAsDataSet constructor.
-     * @param string $location The url that you are going to send this request to. Every Sentry customer has a different URL.
-     * @param string $user The user name of an active account you have with Sentry.
-     * @param string $pass The password for that user name.
+     *
+     * @param string $location     The url that you are going to send this request to. Every Sentry customer has a
+     *                             different URL.
+     * @param string $user         The user name of an active account you have with Sentry.
+     * @param string $pass         The password for that user name.
      * @param string $dataCubeName The name of the data cube you created in Sentry's web interface.
-     * @param string $culture The language string you have to pass. Use en-US as default.
-     * @param array $parameters An array of associative arrays returned from the getDataCubeXmlParameter() function.
-     * @param bool $debug
+     * @param string $culture      The language string you have to pass. Use en-US as default.
+     * @param array  $parameters   An array of associative arrays returned from the getDataCubeXmlParameter() function.
+     * @param bool   $debug
      */
-    public function __construct(string $location, string $user, string $pass, string $dataCubeName, string $culture = 'en-US', array $parameters, bool $debug = false) {
-        parent::__construct($location,
-                            $user,
-                            $pass,
-                            $debug);
+    public function __construct( string $location, string $user, string $pass, string $dataCubeName, string $culture = 'en-US', array $parameters, bool $debug = false ) {
+        parent::__construct( $location,
+                             $user,
+                             $pass,
+                             $debug );
         $this->dataCubeName = $dataCubeName;
-        $this->culture = $culture;
-        $this->parameters = $parameters;
+        $this->culture      = $culture;
+        $this->parameters   = $parameters;
 
-        $xml = $this->formatDataCubeXml($this->dataCubeName,
-                                        $this->parameters);
-        $this->sentry4dataXmlNode = $this->getDataCubeXml($xml);
+        $xml                      = $this->formatDataCubeXml( $this->dataCubeName,
+                                                              $this->parameters );
+        $this->sentry4dataXmlNode = $this->getDataCubeXml( $xml );
     }
 
 
@@ -102,31 +109,31 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
      * @throws SoapFault
      */
     public function run(): array {
-        ini_set('memory_limit',-1);
-        $arguments = ['userName' => $this->user,
-                      'password' => $this->pass,
-                      'dataCubeName' => $this->dataCubeName,
-                      'culture' => $this->culture,
-                      'sentry4dataXmlNode' => $this->sentry4dataXmlNode];
+        ini_set( 'memory_limit', -1 );
+        $arguments = [ 'userName'           => $this->user,
+                       'password'           => $this->pass,
+                       'dataCubeName'       => $this->dataCubeName,
+                       'culture'            => $this->culture,
+                       'sentry4dataXmlNode' => $this->sentry4dataXmlNode ];
         try {
             // $response comes back as a php stdClass with a public
             // property called: RetrieveDataCubeOutputAsDataSetResult;
-            $response = $this->soapClient->RetrieveDataCubeOutputAsDataSet($arguments);
+            $response = $this->soapClient->RetrieveDataCubeOutputAsDataSet( $arguments );
 
-            $schema = new SimpleXMLElement($response->RetrieveDataCubeOutputAsDataSetResult->schema);
-            $any = new SimpleXMLElement($response->RetrieveDataCubeOutputAsDataSetResult->any);
-            $rows = [];
-            foreach($any->NewDataSet->data_node as $index => $xmlRecord){
+            $schema = new SimpleXMLElement( $response->RetrieveDataCubeOutputAsDataSetResult->schema );
+            $any    = new SimpleXMLElement( $response->RetrieveDataCubeOutputAsDataSetResult->any );
+            $rows   = [];
+            foreach ( $any->NewDataSet->data_node as $index => $xmlRecord ) {
                 $rows[] = $xmlRecord;
             }
 
             return [
                 'schema' => $schema,
-                'rows' => $rows
+                'rows'   => $rows,
             ];
-        } catch (SoapFault $e) {
-            throw SentrySoapFaultFactory::make($e);
-        } catch (Exception $e) {
+        } catch ( SoapFault $e ) {
+            throw SentrySoapFaultFactory::make( $e );
+        } catch ( Exception $e ) {
             throw $e;
         }
     }
@@ -136,16 +143,18 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
      * This function accepts two things. A user defined data cube name, and an associative array
      * of data cube parameters, which were return from the getDataCubeXmlParameter() function.
      * Given those things, it formats the xml that Sentry's web services system wants.
+     *
      * @param string $dataCubeName The name you gave to the data cube in Sentry's web interface.
-     * @param array $dataCubeParameters
+     * @param array  $dataCubeParameters
+     *
      * @return string An xml string that gets sent to Sentry's web services system.
      */
-    protected function formatDataCubeXml(string $dataCubeName, array $dataCubeParameters) {
+    protected function formatDataCubeXml( string $dataCubeName, array $dataCubeParameters ) {
 
         $sDataCubeParameters = '';
-        foreach ($dataCubeParameters as $key => $parameter):
-            $wrapperName = $this->getWrapperNameFromDataType($parameter['datatype']);
-            $sDataCubeParameters .= '<dataCubeParameter name="' . $parameter['name'] . '"><' . $wrapperName . '>' . $parameter['value'] . '</' . $wrapperName . '></dataCubeParameter>';
+        foreach ( $dataCubeParameters as $key => $parameter ):
+            $wrapperName         = $this->getWrapperNameFromDataType( $parameter[ 'datatype' ] );
+            $sDataCubeParameters .= '<dataCubeParameter name="' . $parameter[ 'name' ] . '"><' . $wrapperName . '>' . $parameter[ 'value' ] . '</' . $wrapperName . '></dataCubeParameter>';
         endforeach;
 
         return '
@@ -161,40 +170,48 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
     /**
      * After we format the xml string according to Sentry's specifications, we need to convert
      * the string into a stdClass object before we send it off in the request.
+     *
      * @param string $xml An xml string returned from the formatDataCubeXml() function.
+     *
      * @return stdClass This object is the format that Sentry's Web Services wants.
      */
-    protected function getDataCubeXml(string $xml): stdClass {
-        $DOMDocument = new stdClass;
-        $DOMDocument->any = $xml;
+    protected function getDataCubeXml( string $xml ): stdClass {
+        $DOMDocument              = new stdClass;
+        $DOMDocument->any         = $xml;
         $DOMDocument->textContent = $xml;
+
         return $DOMDocument;
     }
 
     /**
      * The xml that Sentry's Web Services wants requires a data type wrapper tag around each parameters.
      * Given a user specified data type, this method returns the appropriate wrapper name.
+     *
      * @param string $dataType
+     *
      * @return string
      * @throws Exception
      */
-    private function getWrapperNameFromDataType(string $dataType): string {
-        $wrapperName = array_search($dataType,
-                                    $this->validDataTypes);
-        if ($wrapperName === false) {
-            throw new Exception("The data type [" . $dataType . "] was not found in validDataTypes");
+    private function getWrapperNameFromDataType( string $dataType ): string {
+        $wrapperName = array_search( $dataType,
+                                     $this->validDataTypes );
+        if ( $wrapperName === false ) {
+            throw new Exception( "The data type [" . $dataType . "] was not found in validDataTypes" );
         }
+
         return $wrapperName;
     }
 
     /**
      * A wrapper function to make the main code more readable. Returns true if the data
      * type passed in, is one that Sentry's Web Services will understand.
+     *
      * @param string $dataType
+     *
      * @return bool
      */
-    private function isValidDataType(string $dataType): bool {
-        return in_array($dataType,
-                        $this->validDataTypes);
+    private function isValidDataType( string $dataType ): bool {
+        return in_array( $dataType,
+                         $this->validDataTypes );
     }
 }
