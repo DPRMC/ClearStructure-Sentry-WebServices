@@ -1,32 +1,26 @@
 {
-    "name": "dprmc/clear-structure-sentry-web-services",
+  "name": "dprmc/clear-structure-sentry-web-services",
   "description": "A library of php code to interact with Sentry's Web Services SOAP API.",
-    "type": "library",
-    "authors": [
-        {
-            "name": "Michael Drennen",
-            "email": "mdrennen@deerparkrd.com"
-        }
-    ],
-    "require": {
-      "php": "^7.2",
-      "ext-soap": "^7.2",
-      "nesbot/carbon": "^1.33"
-
-    },
-    "require-dev": {
-      "phpunit/phpunit": "^7.3",
-      "mikey179/vfsStream": "^1.6",
-      "php-coveralls/php-coveralls": "^2.1"
-    },
-    "scripts":{
-        "pre-autoload-dump":[
-        ]
-    },
-    "autoload": {
-        "psr-4": {
-            "DPRMC\\ClearStructure\\Sentry\\Services\\": "src/services/",
-            "DPRMC\\ClearStructure\\Sentry\\Services\\Exceptions\\": "src/services/exceptions/"
-        }
+  "type": "library",
+  "authors": [
+    {
+      "name": "Michael Drennen",
+      "email": "mdrennen@deerparkrd.com"
     }
+  ],
+  "require": {
+    "php": "^7.2",
+    "ext-soap": "^7.2",
+    "nesbot/carbon": "^1.33"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.3",
+    "mikey179/vfsStream": "^1.6",
+    "php-coveralls/php-coveralls": "^2.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "DPRMC\\": "src/"
+    }
+  }
 }

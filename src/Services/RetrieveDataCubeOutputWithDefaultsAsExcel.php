@@ -30,6 +30,7 @@ class RetrieveDataCubeOutputWithDefaultsAsExcel extends Service{
      */
     protected $destinationDir;
 
+
     /**
      * RetrieveDataCubeOutputWithDefaultsAsExcel constructor.
      * @param string $location  The URL of the Sentry web services API. It's where we will send this request. This url is different for every Sentry customer.
@@ -39,6 +40,7 @@ class RetrieveDataCubeOutputWithDefaultsAsExcel extends Service{
      * @param string $culture   American? Use en-US.
      * @param string $destination   An absolute or relative path to the destination directory. The php function realpath() is used to turn it into an absolute path.
      * @param bool $debug   I don't think we need this anymore.
+     * @throws Exception
      */
     public function __construct(string $location, string $user, string $pass, string $dataReportName, string $culture='en-US', string $destination='', bool $debug = false) {
         parent::__construct($location,
