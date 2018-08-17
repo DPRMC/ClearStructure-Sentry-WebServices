@@ -16,7 +16,8 @@
     },
     "require-dev": {
       "phpunit/phpunit": "^7.3",
-        "mikey179/vfsStream": "^1.6"
+      "mikey179/vfsStream": "^1.6",
+      "php-coveralls/php-coveralls": "^2.1"
     },
     "scripts":{
         "pre-autoload-dump":[
