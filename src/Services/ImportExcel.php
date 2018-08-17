@@ -5,6 +5,10 @@ use SoapFault;
 
 use DPRMC\ClearStructure\Sentry\Services\Exceptions\SentrySoapFaultFactory;
 
+/**
+ * Class ImportExcel
+ * @package DPRMC\ClearStructure\Sentry\Services
+ */
 class ImportExcel extends Service {
     protected $stream;
     protected $sortTransactionsByTradeDate;
@@ -12,6 +16,17 @@ class ImportExcel extends Service {
     protected $culture;
 
 
+    /**
+     * ImportExcel constructor.
+     * @param string $location
+     * @param string $user
+     * @param string $pass
+     * @param string $stream
+     * @param bool $sortTransactionsByTradeDate
+     * @param bool $createTrades
+     * @param string $culture
+     * @param bool $debug
+     */
     public function __construct(
         string $location,
         string $user,
@@ -32,16 +47,16 @@ class ImportExcel extends Service {
     }
 
 
+    /**
+     * @return mixed
+     * @throws Exceptions\AccountNotFoundException
+     * @throws Exceptions\DataCubeNotFoundException
+     * @throws Exceptions\ErrorFetchingHeadersException
+     * @throws SoapFault
+     */
     public function run() {
         ini_set('memory_limit',
                 -1);
-        /*$arguments = ['userName' => $this->user,
-                      'password' => $this->pass,
-                      'dataSet' => $this->dataSet,
-                      'sortTransactionsByTradeDate' => $this->sortTransactionsByTradeDate,
-                      'createTrades' => $this->createTrades,
-                      'cultureString' => $this->culture];*/
-
         $arguments = ['userName' => $this->user,
                       'password' => $this->pass,
                       'stream' => $this->stream,

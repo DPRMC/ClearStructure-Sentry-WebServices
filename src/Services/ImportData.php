@@ -48,12 +48,6 @@ class ImportData extends Service {
     public function run() {
         ini_set('memory_limit',
                 -1);
-        /*$arguments = ['userName' => $this->user,
-                      'password' => $this->pass,
-                      'dataSet' => $this->dataSet,
-                      'sortTransactionsByTradeDate' => $this->sortTransactionsByTradeDate,
-                      'createTrades' => $this->createTrades,
-                      'cultureString' => $this->culture];*/
 
         $arguments = ['userName' => $this->user,
                       'password' => $this->pass,

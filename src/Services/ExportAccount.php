@@ -2,6 +2,8 @@
 
 namespace DPRMC\ClearStructure\Sentry\Services;
 
+use DPRMC\ClearStructure\Sentry\Services\Exceptions\AccountNotFoundException;
+use DPRMC\ClearStructure\Sentry\Services\Exceptions\ErrorFetchingHeadersException;
 use SoapFault;
 use Exception;
 

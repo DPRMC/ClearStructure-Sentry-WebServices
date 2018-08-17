@@ -1,4 +1,5 @@
 <?php
+
 namespace DPRMC\ClearStructure\Sentry\Services;
 
 use Exception;
@@ -48,12 +49,12 @@ class RetrieveDataReportAsDataSet extends Service {
      * data type in the request. This array is every data type they accept.
      * @var array
      */
-    protected $validDataTypes = ['dataReportBooleanParameter' => 'boolean',
-                                 'dataReportDateTimeParameter' => 'datetime',
-                                 'dataReportDecimalParameter' => 'decimal',
-                                 'dataReportDoubleParameter' => 'double',
-                                 'dataReportIntegerParameter' => 'integer',
-                                 'dataReportStringParameter' => 'string'];
+    protected $validDataTypes = [ 'dataReportBooleanParameter'  => 'boolean',
+                                  'dataReportDateTimeParameter' => 'datetime',
+                                  'dataReportDecimalParameter'  => 'decimal',
+                                  'dataReportDoubleParameter'   => 'double',
+                                  'dataReportIntegerParameter'  => 'integer',
+                                  'dataReportStringParameter'   => 'string' ];
 
     /**
      * Example usage:
@@ -65,9 +66,9 @@ class RetrieveDataReportAsDataSet extends Service {
      *                  passed into the getDataCubeXmlParameters() function.
      */
     public static function getDataReportXmlParameter(string $name, string $value = '', string $dataType): array {
-        return ['name' => $name,
-                'value' => $value,
-                'datatype' => $dataType];
+        return [ 'name'     => $name,
+                 'value'    => $value,
+                 'datatype' => $dataType ];
     }
 
     /**
@@ -86,20 +87,20 @@ class RetrieveDataReportAsDataSet extends Service {
                                 string $dataReportName,
                                 string $folderName,
                                 string $culture = 'en-US',
-                                array $parameters,
-                                bool $debug = false) {
+                                array $parameters = [],
+                                bool $debug = FALSE) {
         parent::__construct($location,
                             $user,
                             $pass,
                             $debug);
         $this->dataReportName = $dataReportName;
-        $this->folderName = $folderName;
-        $this->culture = $culture;
-        $this->parameters = $parameters;
+        $this->folderName     = $folderName;
+        $this->culture        = $culture;
+        $this->parameters     = $parameters;
 
         $xml = $this->formatDataReportXml($this->dataReportName,
-                                        $this->folderName,
-                                        $this->parameters);
+                                          $this->folderName,
+                                          $this->parameters);
 
         print_r($xml);
 
@@ -120,29 +121,29 @@ class RetrieveDataReportAsDataSet extends Service {
     public function run(): array {
         ini_set('memory_limit',
                 -1);
-        $arguments = ['userName' => $this->user,
-                      'password' => $this->pass,
-                      'dataReportName' => $this->dataReportName,
-                      'folderName' => $this->folderName,
-                      'sentry4dataXmlNode' => $this->sentry4dataXmlNode,
-                      'culture' => $this->culture];
+        $arguments = [ 'userName'           => $this->user,
+                       'password'           => $this->pass,
+                       'dataReportName'     => $this->dataReportName,
+                       'folderName'         => $this->folderName,
+                       'sentry4dataXmlNode' => $this->sentry4dataXmlNode,
+                       'culture'            => $this->culture ];
         try {
             // $response comes back as a php stdClass with a public
             // property called: RetrieveDataCubeOutputAsDataSetResult;
             $response = $this->soapClient->RetrieveDataReportAsDataSet($arguments);
 
             $schema = new SimpleXMLElement($response->RetrieveDataReportAsDataSetResult->schema);
-            $any = new SimpleXMLElement($response->RetrieveDataReportAsDataSetResult->any);
-            $rows = [];
-            foreach ($any->NewDataSet->data_node as $index => $xmlRecord) {
+            $any    = new SimpleXMLElement($response->RetrieveDataReportAsDataSetResult->any);
+            $rows   = [];
+            foreach ( $any->NewDataSet->data_node as $index => $xmlRecord ) {
                 $rows[] = $xmlRecord;
             }
 
-            return ['schema' => $schema,
-                    'rows' => $rows];
-        } catch (SoapFault $e) {
+            return [ 'schema' => $schema,
+                     'rows'   => $rows ];
+        } catch ( SoapFault $e ) {
             throw SentrySoapFaultFactory::make($e);
-        } catch (Exception $e) {
+        } catch ( Exception $e ) {
             throw $e;
         }
     }
@@ -152,16 +153,19 @@ class RetrieveDataReportAsDataSet extends Service {
      * This function accepts two things. A user defined data cube name, and an associative array
      * of data cube parameters, which were return from the getDataCubeXmlParameter() function.
      * Given those things, it formats the xml that Sentry's web services system wants.
+     *
      * @param string $dataReportName The name you gave to the data cube in Sentry's web interface.
+     * @param string $folderName
      * @param array $dataReportParameters
      * @return string An xml string that gets sent to Sentry's web services system.
+     * @throws Exception
      */
     protected function formatDataCubeXml(string $dataReportName, string $folderName, array $dataReportParameters) {
 
         $concatenatedDataReportParameters = '';
-        foreach ($dataReportParameters as $key => $parameter):
-            $tag = $this->getTagFromDataType($parameter['datatype']);
-            $concatenatedDataReportParameters .= '<dataReportParameter name="' . $parameter['name'] . '"><' . $tag . '>' . $parameter['value'] . '</' . $tag . '></dataReportParameter>';
+        foreach ( $dataReportParameters as $key => $parameter ):
+            $tag                              = $this->getTagFromDataType($parameter[ 'datatype' ]);
+            $concatenatedDataReportParameters .= '<dataReportParameter name="' . $parameter[ 'name' ] . '"><' . $tag . '>' . $parameter[ 'value' ] . '</' . $tag . '></dataReportParameter>';
         endforeach;
 
         return '<sentry4data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://sentry.atlanticinfo.com/XML/namespace" xsi:schemaLocation="http://sentry.atlanticinfo.com/XML/namespace http://sentry.atlanticinfo.com/XML/namespace/Sentry4DataSchema.xsd" >
@@ -176,9 +180,9 @@ class RetrieveDataReportAsDataSet extends Service {
     protected function formatDataReportXml(string $dataReportName, string $folderName, array $dataReportParameters) {
 
         $concatenatedDataReportParameters = '';
-        foreach ($dataReportParameters as $key => $parameter):
-            $tag = $this->getTagFromDataType($parameter['datatype']);
-            $concatenatedDataReportParameters .= '<dataReportParameter name="' . $parameter['name'] . '"><' . $tag . '>' . $parameter['value'] . '</' . $tag . '></dataReportParameter>';
+        foreach ( $dataReportParameters as $key => $parameter ):
+            $tag                              = $this->getTagFromDataType($parameter[ 'datatype' ]);
+            $concatenatedDataReportParameters .= '<dataReportParameter name="' . $parameter[ 'name' ] . '"><' . $tag . '>' . $parameter[ 'value' ] . '</' . $tag . '></dataReportParameter>';
         endforeach;
 
         return '<sentry4data>
@@ -197,8 +201,8 @@ class RetrieveDataReportAsDataSet extends Service {
      * @return stdClass This object is the format that Sentry's Web Services wants.
      */
     protected function getDataCubeXml(string $xml): stdClass {
-        $DOMDocument = new stdClass;
-        $DOMDocument->any = $xml;
+        $DOMDocument              = new stdClass;
+        $DOMDocument->any         = $xml;
         $DOMDocument->textContent = $xml;
         return $DOMDocument;
     }
@@ -213,7 +217,7 @@ class RetrieveDataReportAsDataSet extends Service {
     private function getTagFromDataType(string $dataType): string {
         $wrapperName = array_search($dataType,
                                     $this->validDataTypes);
-        if ($wrapperName === false) {
+        if ( $wrapperName === FALSE ) {
             throw new Exception("The data type [" . $dataType . "] was not found in validDataTypes");
         }
         return $wrapperName;

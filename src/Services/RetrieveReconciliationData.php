@@ -103,6 +103,7 @@ class RetrieveReconciliationData extends Service{
     /**
      * @param $xml
      * @return array
+     * @throws \Sabre\Xml\ParseException
      */
     private function parseHoldingsSchema($xml){
         $service = new \Sabre\Xml\Service();
@@ -123,6 +124,7 @@ class RetrieveReconciliationData extends Service{
     /**
      * @param $xml
      * @return array
+     * @throws \Sabre\Xml\ParseException
      */
     private function parseTransactionsSchema($xml){
         $service = new \Sabre\Xml\Service();

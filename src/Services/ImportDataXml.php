@@ -125,6 +125,7 @@ class ImportDataXml extends Service {
     /**
      * @param SimpleXMLElement $xml
      * @return array
+     * @throws Exception
      */
     protected function parseResultFromXmlInResponse(SimpleXMLElement $xml): array {
         // Get the start time of this import call.

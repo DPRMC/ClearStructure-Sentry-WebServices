@@ -11,7 +11,9 @@
   "require": {
     "php": "^7.2",
     "ext-soap": "^7.2",
-    "nesbot/carbon": "^1.33"
+    "nesbot/carbon": "^1.33",
+    "ext-SimpleXML": "^7.2",
+    "sabre/xml": "^2.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^7.3",
