@@ -45,7 +45,6 @@ class ExportAccount extends Service {
             elseif ( preg_match("/This account \(.*\) was not found\./", $e->getMessage()) === 1 ):
                 throw new AccountNotFoundException($e->getMessage(), $e->getCode(), $e->getPrevious());
             else:
-                var_dump($e->getMessage());
                 throw $e;
             endif;
         } catch ( Exception $e ) {
