@@ -1,5 +1,6 @@
 <?php
 
+namespace Tests;
 use PHPUnit\Framework\TestCase;
 use DPRMC\ClearStructure\Sentry\Services\ExportAccount;
 use DPRMC\ClearStructure\Sentry\Services\Exceptions\AccountNotFoundException;

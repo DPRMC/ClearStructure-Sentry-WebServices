@@ -1,8 +1,11 @@
 <?php
+
 namespace DPRMC\ClearStructure\Sentry\Services;
+
 use SoapFault;
 use Exception;
-class ExportAccount extends Service{
+
+class ExportAccount extends Service {
 
     /**
      * @var string  The account number (assigned by Sentry) of a portfolio.
@@ -18,7 +21,7 @@ class ExportAccount extends Service{
      * @param bool $debug
      * @param string $accountNumber
      */
-    public function __construct($location, $user, $pass, $debug = false, string $accountNumber) {
+    public function __construct($location, $user, $pass, $debug, string $accountNumber) {
         parent::__construct($location,
                             $user,
                             $pass,
@@ -28,22 +31,22 @@ class ExportAccount extends Service{
 
     public function run() {
         $parameters = [
-            'userName' => $this->user,
-            'password' => $this->pass,
-            'accountNumber' => $this->accountNumber
+            'userName'      => $this->user,
+            'password'      => $this->pass,
+            'accountNumber' => $this->accountNumber,
         ];
-        try{
+        try {
             return $this->soapClient->ExportAccount($parameters);
-        } catch(SoapFault $e) {
-            if( preg_match("/Error Fetching http headers/",$e->getMessage()) === 1 ):
+        } catch ( SoapFault $e ) {
+            if ( preg_match("/Error Fetching http headers/", $e->getMessage()) === 1 ):
                 throw new ErrorFetchingHeadersException($e->getMessage(), $e->getCode(), $e->getPrevious());
-            elseif( preg_match("/This account \(.*\) was not found\./",$e->getMessage()) === 1 ):
+            elseif ( preg_match("/This account \(.*\) was not found\./", $e->getMessage()) === 1 ):
                 throw new AccountNotFoundException($e->getMessage(), $e->getCode(), $e->getPrevious());
             else:
                 var_dump($e->getMessage());
                 throw $e;
             endif;
-        } catch(Exception $e) {
+        } catch ( Exception $e ) {
             throw $e;
         }
 

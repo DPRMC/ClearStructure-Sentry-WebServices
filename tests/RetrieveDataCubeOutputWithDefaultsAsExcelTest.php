@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests;
+
 use PHPUnit\Framework\TestCase;
 use DPRMC\ClearStructure\Sentry\Services\RetrieveDataCubeOutputWithDefaultsAsExcel;
 use org\bovigo\vfs\vfsStream;

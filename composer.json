@@ -19,8 +19,8 @@
     "php-coveralls/php-coveralls": "^2.1"
   },
   "autoload": {
-    "psr-4": {
-      "DPRMC\\": "src/"
-    }
+    "classmap": [
+      "src/"
+    ]
   }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace DPRMC\ClearStructure\Sentry\Services;
 
 use SoapClient;
@@ -41,7 +42,6 @@ abstract class Service {
     protected $uri;
 
 
-
     /**
      * @var string  An option in the php SoapClient constructor.
      *              The soap_version option should be one of either SOAP_1_1 or SOAP_1_2
@@ -71,15 +71,16 @@ abstract class Service {
      * @param string $location
      * @param string $user
      * @param string $pass
+     * @param boolean $debug
      */
-    public function __construct(string $location, string $user, string $pass, $debug=false) {
+    public function __construct(string $location, string $user, string $pass, $debug = FALSE) {
         $this->location = $location;
-        $this->user = $user;
-        $this->pass = $pass;
-        $this->trace = $debug ? true : false;
+        $this->user     = $user;
+        $this->pass     = $pass;
+        $this->trace    = $debug ? TRUE : FALSE;
 
         $this->wsdl = $this->location . '?WSDL';
-        $this->uri = 'gibberish'; // Not needed if operating in WSDL mode.
+        $this->uri  = 'gibberish'; // Not needed if operating in WSDL mode.
 
         $this->soapVersion = 'SOAP_1_2';
 
@@ -89,7 +90,7 @@ abstract class Service {
     /**
      * Create a new instance of php's SoapClient.
      */
-    protected function instantiateSoapClient(){
+    protected function instantiateSoapClient() {
         $this->soapClient = new SoapClient($this->wsdl, $this->getSoapClientOptions());
     }
 
@@ -100,26 +101,26 @@ abstract class Service {
      *                  location is the URL of the SOAP server to send the request to, and uri is the
      *                  target namespace of the SOAP service.
      */
-    protected function getSoapClientOptions(): array{
+    protected function getSoapClientOptions(): array {
         return [
-            'location' => $this->location,
-            'uri' => $this->uri,
-            'trace' => $this->trace,
-            'user_agent' => $this->userAgent
+            'location'   => $this->location,
+            'uri'        => $this->uri,
+            'trace'      => $this->trace,
+            'user_agent' => $this->userAgent,
         ];
     }
 
     abstract public function run();
 
-    public function getLastRequestHeaders(){
+    public function getLastRequestHeaders() {
         return $this->soapClient->__getLastRequestHeaders();
     }
 
-    public function getLastRequest(){
+    public function getLastRequest() {
         return $this->soapClient->__getLastRequest();
     }
 
-    public function getLastResponse(){
+    public function getLastResponse() {
         return $this->soapClient->__getLastResponse();
     }
 }
