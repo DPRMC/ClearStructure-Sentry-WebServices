@@ -36,4 +36,13 @@
         <log type="coverage-html" target="build/html" lowUpperBound="35"
              highLowerBound="70"/>
     </logging>
+
+    <php>
+        <env name="UAT_LOCATION" value="http://asdf"/>
+        <env name="USER" value="asdf"/>
+        <env name="PASS" value="asdf"/>
+        <env name="ACCOUNT" value="asdf"/>
+        <env name="REPORT_NAME" value="asdf"/>
+        <env name="DATA_CUBE_NAME" value='asdf'/>
+    </php>
 </phpunit>

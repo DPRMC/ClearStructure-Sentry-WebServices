@@ -82,6 +82,7 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
      * @param string $culture The language string you have to pass. Use en-US as default.
      * @param array $parameters An array of associative arrays returned from the getDataCubeXmlParameter() function.
      * @param bool $debug
+     * @throws Exception
      */
     public function __construct(string $location, string $user, string $pass, string $dataCubeName, string $culture = 'en-US', array $parameters = [], bool $debug = FALSE) {
         parent::__construct($location,
@@ -122,6 +123,7 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
 
             $schema = new SimpleXMLElement($response->RetrieveDataCubeOutputAsDataSetResult->schema);
             $any    = new SimpleXMLElement($response->RetrieveDataCubeOutputAsDataSetResult->any);
+
             $rows   = [];
             foreach ( $any->NewDataSet->data_node as $index => $xmlRecord ) {
                 $rows[] = $xmlRecord;

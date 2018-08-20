@@ -31,6 +31,12 @@ class ExportAccount extends Service {
         $this->accountNumber = $accountNumber;
     }
 
+    /**
+     * @return mixed
+     * @throws AccountNotFoundException
+     * @throws ErrorFetchingHeadersException
+     * @throws SoapFault
+     */
     public function run() {
         $parameters = [
             'userName'      => $this->user,
@@ -41,7 +47,7 @@ class ExportAccount extends Service {
             return $this->soapClient->ExportAccount($parameters);
         } catch ( SoapFault $e ) {
             if ( preg_match("/Error Fetching http headers/", $e->getMessage()) === 1 ):
-                throw new ErrorFetchingHeadersException($e->getMessage(), $e->getCode(), $e->getPrevious());
+                throw new ErrorFetchingHeadersException("You might need to add this code above this function call: [ini_set(\"default_socket_timeout\", 6000);] " . $e->getMessage(), $e->getCode(), $e->getPrevious());
             elseif ( preg_match("/This account \(.*\) was not found\./", $e->getMessage()) === 1 ):
                 throw new AccountNotFoundException($e->getMessage(), $e->getCode(), $e->getPrevious());
             else:
