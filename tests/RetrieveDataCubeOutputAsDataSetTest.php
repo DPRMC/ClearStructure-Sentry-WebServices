@@ -31,6 +31,11 @@ class RetrieveDataCubeOutputAsDataSetTest extends TestCase {
         $response = $service->run();
         print_r($response);
         print_r($_SERVER);
+        $host = gethostname();
+        $ip   = gethostbyname($host);
+
+        var_dump($host);
+        var_dump($ip);
 
         $this->assertTrue(!empty($response[ 'rows' ]));
     }
