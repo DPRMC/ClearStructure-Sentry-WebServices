@@ -30,6 +30,7 @@ class RetrieveDataCubeOutputAsDataSetTest extends TestCase {
 
         $response = $service->run();
         print_r($response);
+        print_r($_SERVER);
 
         $this->assertTrue(!empty($response[ 'rows' ]));
     }
