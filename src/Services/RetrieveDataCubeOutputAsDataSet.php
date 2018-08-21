@@ -124,7 +124,7 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
             $schema = new SimpleXMLElement($response->RetrieveDataCubeOutputAsDataSetResult->schema);
             $any    = new SimpleXMLElement($response->RetrieveDataCubeOutputAsDataSetResult->any);
 
-            $rows   = [];
+            $rows = [];
             foreach ( $any->NewDataSet->data_node as $index => $xmlRecord ) {
                 $rows[] = $xmlRecord;
             }
@@ -197,23 +197,10 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
     private function getWrapperNameFromDataType(string $dataType): string {
         $wrapperName = array_search($dataType,
                                     $this->validDataTypes);
-        if ( $wrapperName === FALSE ) {
+        if ( FALSE === $wrapperName ) {
             throw new Exception("The data type [" . $dataType . "] was not found in validDataTypes");
         }
 
         return $wrapperName;
-    }
-
-    /**
-     * A wrapper function to make the main code more readable. Returns true if the data
-     * type passed in, is one that Sentry's Web Services will understand.
-     *
-     * @param string $dataType
-     *
-     * @return bool
-     */
-    private function isValidDataType(string $dataType): bool {
-        return in_array($dataType,
-                        $this->validDataTypes);
     }
 }
