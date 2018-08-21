@@ -13,7 +13,7 @@ use org\bovigo\vfs\vfsStream;
 class RetrieveDataCubeOutputWithDefaultsAsExcelTest extends TestCase {
 //    public function testValidDataCubeRequest() {
 //        $downloadFilePath = vfsStream::url('downloads/excel.xls');
-//        $service          = new RetrieveDataCubeOutputWithDefaultsAsExcel(getenv('UAT_LOCATION'), getenv('USER'), getenv('PASS'), getenv('REPORT_NAME'));
+//        $service          = new RetrieveDataCubeOutputWithDefaultsAsExcel(getenv('UAT_LOCATION'), getenv('SENTRY_USER'), getenv('SENTRY_PASS'), getenv('REPORT_NAME'));
 //        $response         = $service->run();
 //        file_put_contents($downloadFilePath, $response->RetrieveDataCubeOutputWithDefaultsAsExcelResult);
 //        $this->assertFileExists($downloadFilePath);

@@ -16,8 +16,8 @@ class ExportAccountTest extends TestCase {
         ini_set("default_socket_timeout", 6000);
         $service  = new ExportAccount(
             getenv('UAT_LOCATION'),
-            getenv('USER'),
-            getenv('PASS'), TRUE,
+            getenv('SENTRY_USER'),
+            getenv('SENTRY_PASS'), TRUE,
             getenv('ACCOUNT'));
         $response = $service->run();
 
@@ -34,8 +34,8 @@ class ExportAccountTest extends TestCase {
         $this->expectException(\SoapFault::class);
         $service  = new ExportAccount(
             getenv('UAT_LOCATION'),
-            getenv('USER'),
-            getenv('PASS'), TRUE,
+            getenv('SENTRY_USER'),
+            getenv('SENTRY_PASS'), TRUE,
             getenv('ACCOUNT'));
         $response = $service->run();
     }
@@ -49,8 +49,8 @@ class ExportAccountTest extends TestCase {
         $this->expectException(AccountNotFoundException::class);
         $service = new ExportAccount(
             getenv('UAT_LOCATION'),
-            getenv('USER'),
-            getenv('PASS'), TRUE,
+            getenv('SENTRY_USER'),
+            getenv('SENTRY_PASS'), TRUE,
             'This Account Does Not Exist');
         $service->run();
     }

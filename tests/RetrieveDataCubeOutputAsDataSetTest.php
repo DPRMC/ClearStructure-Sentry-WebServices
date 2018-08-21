@@ -21,8 +21,8 @@ class RetrieveDataCubeOutputAsDataSetTest extends TestCase {
 
         $service = new RetrieveDataCubeOutputAsDataSet(
             getenv('UAT_LOCATION'),
-            getenv('USER'),
-            getenv('PASS'),
+            getenv('SENTRY_USER'),
+            getenv('SENTRY_PASS'),
             getenv('DATA_CUBE_NAME'),
             'en-US',
             $parameters,
@@ -45,8 +45,8 @@ class RetrieveDataCubeOutputAsDataSetTest extends TestCase {
 
         $service = new RetrieveDataCubeOutputAsDataSet(
             getenv('UAT_LOCATION'),
-            getenv('USER'),
-            getenv('PASS'),
+            getenv('SENTRY_USER'),
+            getenv('SENTRY_PASS'),
             getenv('DATA_CUBE_NAME'),
             'en-US',
             $parameters,
