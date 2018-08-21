@@ -91,3 +91,8 @@ try{
     $this->error($e->getMessage() . " " . $e->getFile() . ':' . $e->getLine());
 }
 ```
+
+## Testing
+Included with this library is a <code>phpunit.xml.dist</code> file. 
+
+Create a copy of that named <code>phpunit.xml</code>, and fill in the PHP environment variables that are appropriate for your Sentry Account. 

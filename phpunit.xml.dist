@@ -38,11 +38,12 @@
     </logging>
 
     <php>
-        <env name="UAT_LOCATION" value="http://asdf"/>
-        <env name="USER" value="asdf"/>
-        <env name="PASS" value="asdf"/>
-        <env name="ACCOUNT" value="asdf"/>
-        <env name="REPORT_NAME" value="asdf"/>
-        <env name="DATA_CUBE_NAME" value='asdf'/>
+        <env name="UAT_LOCATION" value="http://the-url-to-your-sentry-uat-api"/>
+        <env name="USER" value="yourSentryUserName"/>
+        <env name="PASS" value="yourEncryptedSentryPassword"/>
+        <env name="ACCOUNT" value="theNameOfAPortfolioThatExistsInYourSentryAccount"/>
+        <env name="REPORT_NAME" value="theNameOfAReportThatExistsInYourSentryAccount"/>
+        <env name="DATA_CUBE_NAME" value='theNameOfADataCubeThatExistsInYourSentryAccount'/>
+        <env name="SECURITY_ID" value='aSentryIdForASecurityThatExistsInYourSentryAccount'/>
     </php>
 </phpunit>
