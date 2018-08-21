@@ -17,13 +17,13 @@ class RetrieveDataCubeOutputAsDataSetTest extends TestCase {
         ini_set("default_socket_timeout", 6000);
 
         $parameters   = [];
-        $parameters[] = RetrieveDataCubeOutputAsDataSet::getDataCubeXmlParameter('security_id', getenv('SECURITY_ID'), 'integer');
+        $parameters[] = RetrieveDataCubeOutputAsDataSet::getDataCubeXmlParameter('security_id', getenv('SENTRY_SECURITY_ID'), 'integer');
 
         $service = new RetrieveDataCubeOutputAsDataSet(
-            getenv('UAT_LOCATION'),
+            getenv('SENTRY_UAT_LOCATION'),
             getenv('SENTRY_USER'),
             getenv('SENTRY_PASS'),
-            getenv('DATA_CUBE_NAME'),
+            getenv('SENTRY_DATA_CUBE_NAME'),
             'en-US',
             $parameters,
             TRUE);
@@ -48,13 +48,13 @@ class RetrieveDataCubeOutputAsDataSetTest extends TestCase {
         $this->expectException(\Exception::class);
         $invalidDataType = 'not_a_real_datatype';
         $parameters      = [];
-        $parameters[]    = RetrieveDataCubeOutputAsDataSet::getDataCubeXmlParameter('security_id', getenv('SECURITY_ID'), $invalidDataType);
+        $parameters[]    = RetrieveDataCubeOutputAsDataSet::getDataCubeXmlParameter('security_id', getenv('SENTRY_SECURITY_ID'), $invalidDataType);
 
         $service = new RetrieveDataCubeOutputAsDataSet(
-            getenv('UAT_LOCATION'),
+            getenv('SENTRY_UAT_LOCATION'),
             getenv('SENTRY_USER'),
             getenv('SENTRY_PASS'),
-            getenv('DATA_CUBE_NAME'),
+            getenv('SENTRY_DATA_CUBE_NAME'),
             'en-US',
             $parameters,
             TRUE);
