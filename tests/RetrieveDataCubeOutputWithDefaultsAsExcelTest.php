@@ -11,11 +11,19 @@ use org\bovigo\vfs\vfsStream;
  * phpunit --filter RetrieveDataCubeOutputWithDefaultsAsExcelTest
  */
 class RetrieveDataCubeOutputWithDefaultsAsExcelTest extends TestCase {
-//    public function testValidDataCubeRequest() {
-//        $downloadFilePath = vfsStream::url('downloads/excel.xls');
-//        $service          = new RetrieveDataCubeOutputWithDefaultsAsExcel(getenv('SENTRY_UAT_LOCATION'), getenv('SENTRY_USER'), getenv('SENTRY_PASS'), getenv('SENTRY_REPORT_NAME'));
-//        $response         = $service->run();
-//        file_put_contents($downloadFilePath, $response->RetrieveDataCubeOutputWithDefaultsAsExcelResult);
-//        $this->assertFileExists($downloadFilePath);
-//    }
+    protected function setUp() {
+        $this->markTestIncomplete();
+    }
+
+    public function validDataCubeRequestShouldDotDotDot() {
+        $downloadFilePath = vfsStream::url('downloads/excel.xls');
+        $service          = new RetrieveDataCubeOutputWithDefaultsAsExcel(
+            getenv('SENTRY_UAT_LOCATION'),
+            getenv('SENTRY_USER'),
+            getenv('SENTRY_PASS'),
+            getenv('SENTRY_REPORT_NAME'));
+        $response         = $service->run();
+        file_put_contents($downloadFilePath, $response->RetrieveDataCubeOutputWithDefaultsAsExcelResult);
+        $this->assertFileExists($downloadFilePath);
+    }
 }
