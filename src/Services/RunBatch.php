@@ -52,7 +52,7 @@ class RunBatch extends Service{
      * @throws Exceptions\ErrorFetchingHeadersException
      * @throws SoapFault
      */
-    public function run() {
+    public function run(string $sheetName) {
         ini_set('memory_limit',
                 -1);
         $arguments = ['userName' => $this->user,

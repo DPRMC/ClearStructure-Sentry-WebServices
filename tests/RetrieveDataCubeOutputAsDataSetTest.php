@@ -11,7 +11,7 @@ class RetrieveDataCubeOutputAsDataSetTest extends TestCase {
 
     /**
      * @test
-     * @group datacube
+     * @group datacubea
      */
     public function validResponseShouldContainRows() {
         ini_set("default_socket_timeout", 6000);
@@ -28,9 +28,11 @@ class RetrieveDataCubeOutputAsDataSetTest extends TestCase {
             $parameters,
             TRUE);
 
-        $response = $service->run();
+        $response = $service->pull([ 'data_node', 'data_node_Coupons', 'parameters' ]);
 
-        $this->assertTrue(!empty($response[ 'rows' ]));
+        $this->assertTrue(!empty($response[ 'data' ][ 'data_node' ]));
+        $this->assertTrue(!empty($response[ 'data' ][ 'data_node_Coupons' ]));
+        $this->assertCount(3, $response[ 'data' ][ 'parameters' ]);
     }
 
     /**

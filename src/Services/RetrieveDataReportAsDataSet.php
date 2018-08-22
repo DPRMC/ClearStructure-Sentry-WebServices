@@ -111,6 +111,7 @@ class RetrieveDataReportAsDataSet extends Service {
     /**
      * The front end for this class. Returns a nice array of data from Sentry. Exact format depends
      * on the data cube that you ask for.
+     * @param string $sheetName The name of the "tab/worksheet/node" in the Sentry result set that we want.
      * @return array    Associative array with two keys: schema and rows. You probably want rows.
      * @throws Exception
      * @throws Exceptions\AccountNotFoundException
@@ -118,7 +119,7 @@ class RetrieveDataReportAsDataSet extends Service {
      * @throws Exceptions\ErrorFetchingHeadersException
      * @throws SoapFault
      */
-    public function run(): array {
+    public function run(string $sheetName): array {
         ini_set('memory_limit',
                 -1);
         $arguments = [ 'userName'           => $this->user,

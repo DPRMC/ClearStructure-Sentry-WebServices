@@ -59,6 +59,8 @@ class ImportDataXml extends Service {
      * $response->ImportDataXmlResult->any is filled with XML that we parse and return an ImportDataXmlResult object. We return that object,
      * because it has some nice functions in it to aggregate data from the xml response. You can import more than one batch in a single
      * ImportDataXml service call.
+     * TODO determine if $sheetName is needed here. Might have to rename this function from run to something else. See abstract parent function.
+     * @param string $sheetName The name of the "tab/worksheet/node" in the Sentry result set that we want.
      * @return ImportDataXmlResult
      * @throws Exception
      * @throws Exceptions\AccountNotFoundException
@@ -66,7 +68,7 @@ class ImportDataXml extends Service {
      * @throws Exceptions\ErrorFetchingHeadersException
      * @throws SoapFault
      */
-    public function run(): ImportDataXmlResult {
+    public function run(string $sheetName): ImportDataXmlResult {
         ini_set('memory_limit',
                 -1);
         $arguments = ['userName' => $this->user,

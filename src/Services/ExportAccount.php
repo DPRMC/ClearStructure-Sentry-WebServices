@@ -32,12 +32,13 @@ class ExportAccount extends Service {
     }
 
     /**
+     * @param string $sheetName The name of the "tab/worksheet/node" in the Sentry result set that we want.
      * @return mixed
      * @throws AccountNotFoundException
      * @throws ErrorFetchingHeadersException
      * @throws SoapFault
      */
-    public function run() {
+    public function run(string $sheetName = 'data_node') {
         $parameters = [
             'userName'      => $this->user,
             'password'      => $this->pass,
@@ -45,7 +46,8 @@ class ExportAccount extends Service {
         ];
         try {
             return $this->soapClient->ExportAccount($parameters);
-        } catch ( SoapFault $e ) {
+        } catch
+        ( SoapFault $e ) {
             if ( preg_match("/Error Fetching http headers/", $e->getMessage()) === 1 ):
                 throw new ErrorFetchingHeadersException("You might need to add this code above this function call: [ini_set(\"default_socket_timeout\", 6000);] " . $e->getMessage(), $e->getCode(), $e->getPrevious());
             elseif ( preg_match("/This account \(.*\) was not found\./", $e->getMessage()) === 1 ):

@@ -110,7 +110,6 @@ abstract class Service {
         ];
     }
 
-    abstract public function run();
 
     public function getLastRequestHeaders() {
         return $this->soapClient->__getLastRequestHeaders();

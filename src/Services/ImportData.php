@@ -45,7 +45,7 @@ class ImportData extends Service {
     }
 
 
-    public function run() {
+    public function run(string $sheetName) {
         ini_set('memory_limit',
                 -1);
 
