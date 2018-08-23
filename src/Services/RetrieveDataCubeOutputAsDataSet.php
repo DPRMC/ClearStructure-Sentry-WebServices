@@ -98,10 +98,6 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
         $this->sentry4dataXmlNode = $this->getDataCubeXml($xml);
     }
 
-    public function run() {
-
-    }
-
     /**
      * The front end for this class. Returns a nice array of data from Sentry. Exact format depends
      * on the data cube that you ask for.

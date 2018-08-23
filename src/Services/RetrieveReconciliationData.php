@@ -62,14 +62,13 @@ class RetrieveReconciliationData extends Service{
     }
 
     /**
-     * @param string $sheetName
      * @return array
      * @throws Exceptions\AccountNotFoundException
      * @throws Exceptions\DataCubeNotFoundException
      * @throws Exceptions\ErrorFetchingHeadersException
      * @throws SoapFault
      */
-    public function run(string $sheetName) {
+    public function run() {
         $arguments = ['userName' => $this->user,
                       'password' => $this->pass,
                       'accountNumber' => $this->accountNumber,

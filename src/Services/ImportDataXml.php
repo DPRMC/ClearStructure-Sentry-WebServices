@@ -1,4 +1,5 @@
 <?php
+
 namespace DPRMC\ClearStructure\Sentry\Services;
 
 use Exception;
@@ -39,7 +40,7 @@ class ImportDataXml extends Service {
                                 bool $sortTransactionsByTradeDate,
                                 bool $createTrades,
                                 string $culture = 'en-US',
-                                $debug = false) {
+                                $debug = FALSE) {
         parent::__construct($location,
                             $user,
                             $pass,
@@ -50,8 +51,8 @@ class ImportDataXml extends Service {
                                                    $dataSet);
 
         $this->sortTransactionsByTradeDate = $sortTransactionsByTradeDate;
-        $this->createTrades = $createTrades;
-        $this->culture = $culture;
+        $this->createTrades                = $createTrades;
+        $this->culture                     = $culture;
     }
 
 
@@ -60,7 +61,6 @@ class ImportDataXml extends Service {
      * because it has some nice functions in it to aggregate data from the xml response. You can import more than one batch in a single
      * ImportDataXml service call.
      * TODO determine if $sheetName is needed here. Might have to rename this function from run to something else. See abstract parent function.
-     * @param string $sheetName The name of the "tab/worksheet/node" in the Sentry result set that we want.
      * @return ImportDataXmlResult
      * @throws Exception
      * @throws Exceptions\AccountNotFoundException
@@ -68,24 +68,23 @@ class ImportDataXml extends Service {
      * @throws Exceptions\ErrorFetchingHeadersException
      * @throws SoapFault
      */
-    public function run(string $sheetName): ImportDataXmlResult {
-        ini_set('memory_limit',
-                -1);
-        $arguments = ['userName' => $this->user,
-                      'password' => $this->pass,
-                      'xmlString' => $this->dataSet,
-                      'sortTransactionsByTradeDate' => $this->sortTransactionsByTradeDate,
-                      'createTrades' => $this->createTrades,
-                      'cultureString' => $this->culture];
+    public function run(): ImportDataXmlResult {
+        ini_set('memory_limit', -1);
+        $arguments = [ 'userName'                    => $this->user,
+                       'password'                    => $this->pass,
+                       'xmlString'                   => $this->dataSet,
+                       'sortTransactionsByTradeDate' => $this->sortTransactionsByTradeDate,
+                       'createTrades'                => $this->createTrades,
+                       'cultureString'               => $this->culture ];
 
         try {
             $response = $this->soapClient->ImportDataXml($arguments);
-            $xml = $this->parseXmlFromResponse($response);
-            $results = $this->parseResultFromXmlInResponse($xml);
+            $xml      = $this->parseXmlFromResponse($response);
+            $results  = $this->parseResultFromXmlInResponse($xml);
             return new ImportDataXmlResult($results);
-        } catch (SoapFault $e) {
+        } catch ( SoapFault $e ) {
             throw SentrySoapFaultFactory::make($e);
-        } catch (Exception $e) {
+        } catch ( Exception $e ) {
             throw $e;
         }
     }
@@ -99,9 +98,9 @@ class ImportDataXml extends Service {
      */
     protected function formatDataSetAsXml(string $dataSetName, array $dataSet): string {
         $xmlElement = new SimpleXMLElement('<root/>');
-        foreach ($dataSet as $i => $row) {
-            foreach ($row as $name => $value) {
-                $xmlElement->{$dataSetName}[$i]->{$name} = $value;
+        foreach ( $dataSet as $i => $row ) {
+            foreach ( $row as $name => $value ) {
+                $xmlElement->{$dataSetName}[ $i ]->{$name} = $value;
             }
         }
         $xml = trim($xmlElement->asXML());
@@ -116,7 +115,7 @@ class ImportDataXml extends Service {
      * @throws Exception
      */
     protected function parseXmlFromResponse(stdClass $response): SimpleXMLElement {
-        if (!isset($response->ImportDataXmlResult->any)) {
+        if ( !isset($response->ImportDataXmlResult->any) ) {
             throw new Exception("The response from Sentry was not formatted properly. If there actually was a valid response, then you need to add code to catch this variation.");
         }
 
@@ -135,32 +134,32 @@ class ImportDataXml extends Service {
 
         $numTables = $xml->tables->count();
 
-        for ($i = 0; $i < $numTables; $i++) {
+        for ( $i = 0; $i < $numTables; $i++ ) {
 
-            $table = $xml->tables[$i]->table;
+            $table     = $xml->tables[ $i ]->table;
             $tableName = $this->xmlAttribute($table,
-                                             'name') ?? null;
+                                             'name') ?? NULL;
 
             $rowsImported = strval($table->import);
-            $errors = strval($table->errors);
-            $runTime = strval($table->RunTime);
+            $errors       = strval($table->errors);
+            $runTime      = strval($table->RunTime);
 
             // RunTime statistics.
             $startTime = $this->xmlAttribute($table->RunTime,
                                              'Start') ? $this->convertTimeStringWithMicrosecondsToCarbon($this->xmlAttribute($table->RunTime,
                                                                                                                              'Start'),
-                                                                                                         $this->sentryTimeZone) : null;
-            $endTime = $this->xmlAttribute($table->RunTime,
-                                           'End') ? $this->convertTimeStringWithMicrosecondsToCarbon($this->xmlAttribute($table->RunTime,
-                                                                                                                         'End'),
-                                                                                                     $this->sentryTimeZone) : null;
+                                                                                                         $this->sentryTimeZone) : NULL;
+            $endTime   = $this->xmlAttribute($table->RunTime,
+                                             'End') ? $this->convertTimeStringWithMicrosecondsToCarbon($this->xmlAttribute($table->RunTime,
+                                                                                                                           'End'),
+                                                                                                       $this->sentryTimeZone) : NULL;
 
-            $newTable = ['name' => $tableName,
-                         'rows_imported' => $rowsImported,
-                         'errors' => $errors,
-                         'start_time' => $startTime,
-                         'end_time' => $endTime,
-                         'run_time' => $runTime];
+            $newTable = [ 'name'          => $tableName,
+                          'rows_imported' => $rowsImported,
+                          'errors'        => $errors,
+                          'start_time'    => $startTime,
+                          'end_time'      => $endTime,
+                          'run_time'      => $runTime ];
 
             $tables[] = $newTable;
         }
@@ -176,8 +175,8 @@ class ImportDataXml extends Service {
      * @throws Exception
      */
     protected function xmlAttribute(SimpleXMLElement $xml, string $attribute): string {
-        if (isset($xml[$attribute])) {
-            return strval($xml[$attribute]);
+        if ( isset($xml[ $attribute ]) ) {
+            return strval($xml[ $attribute ]);
         }
         throw new Exception("The attribute [$attribute] was not found in the SimpleXMLElement you passed in.");
     }

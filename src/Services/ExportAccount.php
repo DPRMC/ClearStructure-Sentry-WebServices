@@ -32,13 +32,12 @@ class ExportAccount extends Service {
     }
 
     /**
-     * @param string $sheetName The name of the "tab/worksheet/node" in the Sentry result set that we want.
      * @return mixed
      * @throws AccountNotFoundException
      * @throws ErrorFetchingHeadersException
      * @throws SoapFault
      */
-    public function run(string $sheetName = 'data_node') {
+    public function run() {
         $parameters = [
             'userName'      => $this->user,
             'password'      => $this->pass,

@@ -60,7 +60,7 @@ class RetrieveDataCubeOutputWithDefaultsAsExcel extends Service{
      * @throws Exception
      * @throws SoapFault
      */
-    public function run(string $sheetName) {
+    public function run() {
         $parameters = [
             'userName' => $this->user,
             'password' => $this->pass,

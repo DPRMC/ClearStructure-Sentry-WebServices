@@ -111,7 +111,7 @@ class RetrieveDataReportAsDataSet extends Service {
     /**
      * The front end for this class. Returns a nice array of data from Sentry. Exact format depends
      * on the data cube that you ask for.
-     * @param string $sheetName The name of the "tab/worksheet/node" in the Sentry result set that we want.
+     * @param array $sheetNames The names of the "tabs/worksheets/nodes" in the Sentry result set that we want.
      * @return array    Associative array with two keys: schema and rows. You probably want rows.
      * @throws Exception
      * @throws Exceptions\AccountNotFoundException
@@ -119,7 +119,7 @@ class RetrieveDataReportAsDataSet extends Service {
      * @throws Exceptions\ErrorFetchingHeadersException
      * @throws SoapFault
      */
-    public function run(string $sheetName): array {
+    public function pull(array $sheetNames = [ 'data_node' ]): array {
         ini_set('memory_limit',
                 -1);
         $arguments = [ 'userName'           => $this->user,
@@ -135,13 +135,20 @@ class RetrieveDataReportAsDataSet extends Service {
 
             $schema = new SimpleXMLElement($response->RetrieveDataReportAsDataSetResult->schema);
             $any    = new SimpleXMLElement($response->RetrieveDataReportAsDataSetResult->any);
-            $rows   = [];
-            foreach ( $any->NewDataSet->data_node as $index => $xmlRecord ) {
-                $rows[] = $xmlRecord;
-            }
 
-            return [ 'schema' => $schema,
-                     'rows'   => $rows ];
+            $data = [];
+            foreach ( $sheetNames as $i => $sheetName ):
+                $rows = [];
+                foreach ( $any->NewDataSet->{$sheetName} as $index => $xmlRecord ) :
+                    $rows[] = $xmlRecord;
+                endforeach;
+                $data[ $sheetName ] = $rows;
+            endforeach;
+
+            return [
+                'schema' => $schema,
+                'data'   => $data,
+            ];
         } catch ( SoapFault $e ) {
             throw SentrySoapFaultFactory::make($e);
         } catch ( Exception $e ) {
