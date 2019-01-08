@@ -1,3 +1,4 @@
 phpunit.xml
 build
 vendor
+.env

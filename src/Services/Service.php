@@ -73,7 +73,7 @@ abstract class Service {
      * @param string $pass
      * @param boolean $debug
      */
-    public function __construct(string $location, string $user, string $pass, $debug = FALSE) {
+    public function __construct( string $location, string $user, string $pass, $debug = FALSE ) {
         $this->location = $location;
         $this->user     = $user;
         $this->pass     = $pass;
@@ -91,7 +91,7 @@ abstract class Service {
      * Create a new instance of php's SoapClient.
      */
     protected function instantiateSoapClient() {
-        $this->soapClient = new SoapClient($this->wsdl, $this->getSoapClientOptions());
+        $this->soapClient = new SoapClient( $this->wsdl, $this->getSoapClientOptions() );
     }
 
     /**
@@ -103,10 +103,12 @@ abstract class Service {
      */
     protected function getSoapClientOptions(): array {
         return [
-            'location'   => $this->location,
-            'uri'        => $this->uri,
-            'trace'      => $this->trace,
-            'user_agent' => $this->userAgent,
+            'location'           => $this->location,
+            'uri'                => $this->uri,
+            'trace'              => $this->trace,
+            'user_agent'         => $this->userAgent,
+            'exceptions'         => TRUE,
+            'connection_timeout' => 60,
         ];
     }
 

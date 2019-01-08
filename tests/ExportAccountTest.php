@@ -11,9 +11,10 @@ class ExportAccountTest extends TestCase {
     /**
      * @test
      * @group account
+     * @group valid
      */
     public function validResponseShouldContainAny() {
-        ini_set("default_socket_timeout", 6000);
+        //ini_set("default_socket_timeout", 6000);
         $service  = new ExportAccount(
             getenv('SENTRY_UAT_LOCATION'),
             getenv('SENTRY_USER'),
@@ -28,8 +29,9 @@ class ExportAccountTest extends TestCase {
     /**
      * @test
      * @group account
+     * @group error
      */
-    public function validResponseWithShortSocketTimeoutShouldThrowException() {
+    public function requestWithShortSocketTimeoutShouldThrowException() {
         ini_set("default_socket_timeout", 1);
         $this->expectException(\SoapFault::class);
         $service  = new ExportAccount(
@@ -37,14 +39,15 @@ class ExportAccountTest extends TestCase {
             getenv('SENTRY_USER'),
             getenv('SENTRY_PASS'), TRUE,
             getenv('SENTRY_ACCOUNT'));
-        $response = $service->run();
+        $service->run();
     }
 
     /**
      * @test
      * @group account
+     * @group error
      */
-    public function invalidResponseShouldThrowException() {
+    public function invalidAccountShouldThrowException() {
         ini_set("default_socket_timeout", 6000);
         $this->expectException(AccountNotFoundException::class);
         $service = new ExportAccount(
@@ -58,6 +61,7 @@ class ExportAccountTest extends TestCase {
     /**
      * @test
      * @group account
+     * @group error
      */
     public function invalidLocationShouldThrowSoapFault() {
         ini_set("default_socket_timeout", 6000);
