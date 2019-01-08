@@ -11,7 +11,7 @@ class RetrieveDataCubeOutputAsDataSetTest extends TestCase {
 
     /**
      * @test
-     * @group datacubea
+     * @group datacube
      */
     public function validResponseShouldContainRows() {
         ini_set("default_socket_timeout", 6000);
