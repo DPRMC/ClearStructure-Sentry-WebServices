@@ -16,6 +16,11 @@ class ExportAccount extends Service {
     protected $accountNumber;
 
     /**
+     * @var int The value for ini's default_socket_timeout. I set it arbitrarily large here, because I was consistently getting errors because Sentry's system was slow to respond.
+     */
+    protected $defaultSocketTimeout = 9999999;
+
+    /**
      * ExportAccount constructor.
      * @param string $location
      * @param string $user
@@ -38,6 +43,10 @@ class ExportAccount extends Service {
      * @throws SoapFault
      */
     public function run() {
+
+        $existingDefaultSocketTimeout = ini_get( 'default_socket_timeout' );
+        ini_set( 'default_socket_timeout', $this->defaultSocketTimeout );
+
         $parameters = [
             'userName'      => $this->user,
             'password'      => $this->pass,
@@ -47,6 +56,7 @@ class ExportAccount extends Service {
             return $this->soapClient->ExportAccount($parameters);
         } catch
         ( SoapFault $e ) {
+            ini_set( 'default_socket_timeout', $existingDefaultSocketTimeout );
             if ( preg_match("/Error Fetching http headers/", $e->getMessage()) === 1 ):
                 throw new ErrorFetchingHeadersException("You might need to add this code above this function call: [ini_set(\"default_socket_timeout\", 6000);] " . $e->getMessage(), $e->getCode(), $e->getPrevious());
             elseif ( preg_match("/This account \(.*\) was not found\./", $e->getMessage()) === 1 ):
@@ -55,6 +65,7 @@ class ExportAccount extends Service {
                 throw $e;
             endif;
         } catch ( Exception $e ) {
+            ini_set( 'default_socket_timeout', $existingDefaultSocketTimeout );
             throw $e;
         }
 
