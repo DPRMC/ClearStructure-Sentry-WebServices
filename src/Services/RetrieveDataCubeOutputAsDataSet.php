@@ -121,7 +121,6 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
         $existingDefaultSocketTimeout = ini_get( 'default_socket_timeout' );
         ini_set( 'default_socket_timeout', $this->defaultSocketTimeout );
 
-
         $arguments = [ 'userName'           => $this->user,
                        'password'           => $this->pass,
                        'dataCubeName'       => $this->dataCubeName,
