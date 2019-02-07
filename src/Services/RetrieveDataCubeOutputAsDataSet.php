@@ -53,6 +53,12 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
                                   'dataCubeStringParameter'   => 'string' ];
 
     /**
+     * @var int The value for ini's default_socket_timeout. I set it arbitrarily large here, because I was consistently getting errors because Sentry's system was slow to respond.
+     */
+    protected $defaultSocketTimeout = 9999999;
+
+
+    /**
      * Example usage:
      * $params[] = $this->getDataCubeXmlParameter('as_of_date', $asOfDate, 'datetime');
      *
@@ -111,6 +117,11 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
      */
     public function pull(array $sheetNames = [ 'data_node' ]): array {
         ini_set('memory_limit', -1);
+
+        $existingDefaultSocketTimeout = ini_get( 'default_socket_timeout' );
+        ini_set( 'default_socket_timeout', $this->defaultSocketTimeout );
+
+
         $arguments = [ 'userName'           => $this->user,
                        'password'           => $this->pass,
                        'dataCubeName'       => $this->dataCubeName,
@@ -138,10 +149,22 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
                 'data'   => $data,
             ];
         } catch ( SoapFault $e ) {
+            ini_set( 'default_socket_timeout', $existingDefaultSocketTimeout );
             throw SentrySoapFaultFactory::make($e);
         } catch ( Exception $e ) {
+            ini_set( 'default_socket_timeout', $existingDefaultSocketTimeout );
             throw $e;
         }
+    }
+
+    /**
+     * If for some reason you need to set a fixed socket timeout, use this method before you call run()
+     * @param int $defaultSocketTimeoutInSeconds
+     * @return $this
+     */
+    public function setDefaultSocketTimeout( int $defaultSocketTimeoutInSeconds ) {
+        $this->defaultSocketTimeout = $defaultSocketTimeoutInSeconds;
+        return $this;
     }
 
 
