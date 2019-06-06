@@ -1,4 +1,7 @@
 # ClearStructure-Sentry-WebServices
+
+[![Latest Stable Version](https://poser.pugx.org/dprmc/clear-structure-sentry-web-services/v/stable)](https://packagist.org/packages/dprmc/clear-structure-sentry-web-services) [![Total Downloads](https://poser.pugx.org/dprmc/clear-structure-sentry-web-services/downloads)](https://packagist.org/packages/dprmc/clear-structure-sentry-web-services) [![License](https://poser.pugx.org/dprmc/clear-structure-sentry-web-services/license)](https://packagist.org/packages/dprmc/clear-structure-sentry-web-services) [![composer.lock](https://poser.pugx.org/dprmc/clear-structure-sentry-web-services/composerlock)](https://packagist.org/packages/dprmc/clear-structure-sentry-web-services) 
+
 A php library that enables Sentry users to access the Web Services API.
 
 ## Getting started
