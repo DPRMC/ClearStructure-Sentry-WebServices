@@ -38,7 +38,7 @@
     </logging>
 
     <php>
-        <env name="SENTRY_UAT_LOCATION" value="http://the-url-to-your-sentry-uat-api"/>
+        <env name="SENTRY_UAT_LOCATION" value="http://the-url-to-your-sentry-uat-api/WebServices/DataReporterService.asmx"/>
         <env name="SENTRY_USER" value="yourSentryUserName"/>
         <env name="SENTRY_PASS" value="yourEncryptedSentryPassword"/>
         <env name="SENTRY_ACCOUNT" value="theNameOfAPortfolioThatExistsInYourSentryAccount"/>
