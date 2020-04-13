@@ -53,7 +53,8 @@ class RetrieveDataCubeOutputAsDataSet extends Service {
                                   'dataCubeStringParameter'   => 'string' ];
 
     /**
-     * @var int The value for ini's default_socket_timeout. I set it arbitrarily large here, because I was consistently getting errors because Sentry's system was slow to respond.
+     * @var int The value for ini's default_socket_timeout. I set it arbitrarily large here, because I was
+     * consistently getting errors because Sentry's system was slow to respond.
      */
     protected $defaultSocketTimeout = 9999999;
 

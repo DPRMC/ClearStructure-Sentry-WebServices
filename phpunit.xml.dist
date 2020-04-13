@@ -45,5 +45,6 @@
         <env name="SENTRY_REPORT_NAME" value="theNameOfAReportThatExistsInYourSentryAccount"/>
         <env name="SENTRY_DATA_CUBE_NAME" value='theNameOfADataCubeThatExistsInYourSentryAccount'/>
         <env name="SENTRY_SECURITY_ID" value='aSentryIdForASecurityThatExistsInYourSentryAccount'/>
+        <env name="SENTRY_AS_OF_DATE" value='aSentryDateForUseAsParameterInYourDataCube'/>
     </php>
 </phpunit>
