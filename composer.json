@@ -10,17 +10,16 @@
     }
   ],
   "require": {
-    "php": "^7.2||^8.0",
+    "php": "^7.2|^8.0",
     "ext-soap": "*",
-    "nesbot/carbon": "^1.33 || ^2.0",
+    "nesbot/carbon": "^2.0",
     "ext-SimpleXML": "*",
-    "sabre/xml": "^2.0||dev-master"
+    "sabre/xml": "^2.0|dev-master"
   },
   "require-dev": {
-
-    "mikey179/vfsstream": "^1.6",
+    "mikey179/vfsstream": "^1.0",
     "php-coveralls/php-coveralls": "^2.0",
-    "phpunit/phpunit": "^9.5"
+    "phpunit/phpunit": "^9.0"
   },
   "autoload": {
     "classmap": [
