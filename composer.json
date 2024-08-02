@@ -12,14 +12,14 @@
   "require": {
     "php": "^7.2|^8.0",
     "ext-soap": "*",
-    "nesbot/carbon": "^2.0",
+    "nesbot/carbon": "^2|^3",
     "ext-SimpleXML": "*",
     "sabre/xml": "^2.0|dev-master"
   },
   "require-dev": {
     "mikey179/vfsstream": "^1.0",
     "php-coveralls/php-coveralls": "^2.0",
-    "phpunit/phpunit": "^9.0"
+    "phpunit/phpunit": "^9|^10|^11"
   },
   "autoload": {
     "classmap": [
